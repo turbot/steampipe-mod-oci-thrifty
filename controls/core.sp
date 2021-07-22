@@ -5,7 +5,7 @@ locals {
 }
 
 benchmark "core" {
-  title         = "core Checks"
+  title         = "Core Checks"
   description   = "Thrifty developers eliminate unused and under-utilized core resources."
   documentation = file("./controls/docs/core.md")
   tags          = local.core_common_tags
@@ -143,7 +143,7 @@ control "core_boot_volume_low_usage" {
 }
 
 control "core_instance_long_running" {
-  title       = "Long running instances should be reviewed"
+  title       = "Long running compute instances should be reviewed"
   description = "Instances should ideally be ephemeral and rehydrated frequently, check why these instances have been running for so long."
   severity    = "low"
 
@@ -151,10 +151,14 @@ control "core_instance_long_running" {
     select
       a.id as resource,
       case
+        when a.lifecycle_state <> 'RUNNING' then 'skip'
         when date_part('day', now() - a.time_created) > 90 then 'alarm'
         else 'ok'
       end as status,
-      a.title || ' has been running ' || date_part('day', now() - a.time_created) || ' days.' as reason,
+      case
+        when a.lifecycle_state <> 'RUNNING' then a.title || ' in ' || a.lifecycle_state || ' state.'
+        else a.title || ' has been running ' || date_part('day', now() - a.time_created) || ' days.'
+      end as reason,
       a.region,
       coalesce(c.name, 'root') as compartment
     from
@@ -168,7 +172,7 @@ control "core_instance_long_running" {
 }
 
 control "core_instance_low_utilization" {
-  title         = "Core instances with low CPU utilization should be reviewed"
+  title         = "Compute instances with low CPU utilization should be reviewed"
   description   = "Resize or eliminate under utilized instances."
   severity      = "low"
 
@@ -235,8 +239,8 @@ control "core_public_ip_unattached" {
 }
 
 control "core_volume_auto_tune_performance_enabled" {
-  title       = "Block volume should be enabled with auto-tune for performance"
-  description = "Block volume auto-tune should be enabled for performance."
+  title       = "Block volume should be enabled with auto-tune for better performance"
+  description = "Block volume auto-tune should be enabled for better performance."
   severity    = "low"
 
   sql = <<-EOT

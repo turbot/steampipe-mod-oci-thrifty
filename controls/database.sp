@@ -5,7 +5,7 @@ locals {
 }
 
 benchmark "database" {
-  title         = "Database Checks"
+  title         = "Oracle Database Checks"
   description   = "Thrifty developers checks old autonomous database which were created over 90 days ago."
   documentation = file("./controls/docs/database.md")
   tags          = local.database_common_tags
