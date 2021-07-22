@@ -6,7 +6,7 @@ locals {
 
 benchmark "objectstorage" {
   title         = "ObjectStorage Checks"
-  description   = "Thrifty developers ensure their object storage buckets have managed lifecycles."
+  description   = "Thrifty developers ensure their object storage buckets have managed lifecycle policies."
   documentation = file("./controls/docs/objectstorage.md")
   tags          = local.objectstorage_common_tags
   children = [
@@ -15,8 +15,8 @@ benchmark "objectstorage" {
 }
 
 control "objectstorage_bucket_without_lifecycle_policy" {
-  title       = "ObjectStorage buckets should have lifecycle policies"
-  description = "Buckets should have a lifecycle policy associated for data retention."
+  title       = "Object Storage buckets should have lifecycle policies"
+  description = "Object Storage buckets should have a lifecycle policy associated for data retention."
   severity    = "low"
 
   sql = <<-EOT
@@ -40,6 +40,6 @@ control "objectstorage_bucket_without_lifecycle_policy" {
   EOT
 
   tags = merge(local.core_common_tags, {
-    class = "deprecated"
+    class = "managed"
   })
 }

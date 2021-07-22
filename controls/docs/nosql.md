@@ -1,6 +1,6 @@
 ## Thrifty NoSQL Benchmark
 
-Thrifty developers archive NoSQL tables with stale data. This benchmark focuses on finding tables where the data has not changed recently.
+Thrifty developers archive NoSQL tables with stale data. This benchmark focuses on finding NoSQL tables where the data has not changed recently.
 
 ### Default Thresholds
 

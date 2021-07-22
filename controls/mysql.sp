@@ -32,7 +32,8 @@ control "mysql_db_system_age_90" {
     from
       oci_mysql_db_system as a
       left join oci_identity_compartment as c on c.id = a.compartment_id
-    where a.lifecycle_state <> 'DELETED';
+    where
+      a.lifecycle_state <> 'DELETED';
   EOT
 
   tags = merge(local.mysql_common_tags, {

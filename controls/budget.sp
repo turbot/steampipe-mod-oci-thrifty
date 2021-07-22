@@ -50,7 +50,8 @@ control "budget_alert_count" {
     from
       compartment_with_budget as c
       left join oci_budget_budget as a on a.targets ?& array[c.id]
-    where c.lifecycle_state = 'ACTIVE';
+    where
+      c.lifecycle_state = 'ACTIVE';
   EOT
 
   tags = merge(local.core_common_tags, {

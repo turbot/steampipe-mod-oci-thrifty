@@ -33,7 +33,8 @@ control "database_autonomous_database_age_90" {
     from
       oci_database_autonomous_database as a
       left join oci_identity_compartment as c on c.id = a.compartment_id
-    where a.lifecycle_state <> 'DELETED';
+    where
+      a.lifecycle_state <> 'DELETED';
   EOT
 
   tags = merge(local.database_common_tags, {
