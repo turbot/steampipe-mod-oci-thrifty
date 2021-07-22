@@ -39,7 +39,7 @@ control "objectstorage_bucket_without_lifecycle_policy" {
       left join oci_identity_compartment as c on c.id = a.compartment_id;
   EOT
 
-  tags = merge(local.core_common_tags, {
+  tags = merge(local.objectstorage_common_tags, {
     class = "managed"
   })
 }
