@@ -11,6 +11,7 @@ benchmark "database" {
   tags          = local.database_common_tags
   children = [
     control.database_autonomous_database_age_90,
+    control.database_autonomous_database_low_utilization
   ]
 }
 
@@ -39,5 +40,47 @@ control "database_autonomous_database_age_90" {
 
   tags = merge(local.database_common_tags, {
     class = "deprecated"
+  })
+}
+
+control "database_autonomous_database_low_utilization" {
+  title         = "Autonomous databases with low CPU utilization should be reviewed"
+  description   = "Resize or eliminate under utilized autonomous databases."
+  severity      = "low"
+
+  sql = <<-EOT
+    with database_autonomous_database_utilization as (
+      select
+        id,
+        round(cast(sum(maximum)/count(maximum) as numeric), 1) as avg_max,
+        count(maximum) as days
+      from
+        oci_database_autonomous_database_metric_cpu_utilization_daily
+      where
+        date_part('day', now() - timestamp) <= 30
+      group by id
+    )
+    select
+      i.id as resource,
+      case
+        when avg_max is null then 'error'
+        when avg_max < 20 then 'alarm'
+        when avg_max < 35 then 'info'
+        else 'ok'
+      end as status,
+      case
+        when avg_max is null then 'Monitoring metrics not available for ' || i.title || '.'
+        else i.title || ' averaging ' || avg_max || '% max utilization over the last ' || days || ' day(s).'
+      end as reason,
+      i.region,
+      coalesce(c.name, 'root') as compartment
+    from
+      oci_database_autonomous_database as i
+      left join database_autonomous_database_utilization as u on u.id = i.id
+      left join oci_identity_compartment as c on c.id = i.compartment_id;
+  EOT
+
+  tags = merge(local.database_common_tags, {
+    class = "unused"
   })
 }
