@@ -1,6 +1,6 @@
-## Thrifty ObjectStorage Benchmark
+## Thrifty Object Storage Benchmark
 
-Thrifty developers ensure their object storage buckets have managed lifecycle policy. This object storage benchmark currently checks that your buckets have a lifecycle policy attached to them.
+Thrifty developers ensure their Object Storage buckets have a managed lifecycle policy.
 
 ### Default Thresholds
 
