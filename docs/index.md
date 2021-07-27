@@ -2,13 +2,13 @@
 repository: "https://github.com/turbot/steampipe-mod-oci-thrifty"
 ---
 
-# OCI Thrifty Mod
+# Oracle Cloud Thrifty Mod
 
-Be Thrifty on OCI! This mod checks for unused resources and opportunities to optimize your spend on OCI.
+Be Thrifty on Oracle Cloud! This mod checks for unused resources and opportunities to optimize your spend on Oracle Cloud.
 
 ## References
 
-[OCI](hhttps://www.oracle.com) is a deep and broad platform of public cloud services that enables customers to build and run a wide range of applications in a scalable, secure, highly available, and high-performance environment.
+[Oracle Cloud](https://www.oracle.com) is a deep and broad platform of public cloud services that enables customers to build and run a wide range of applications in a scalable, secure, highly available, and high-performance environment.
 
 [Steampipe](https://steampipe.io) is an open source CLI to instantly query cloud APIs using SQL.
 
