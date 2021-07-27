@@ -23,9 +23,9 @@ benchmark "core" {
 }
 
 control "core_boot_and_block_volume_attached_stopped_instance" {
-  title         = "Volumes attached to stopped instances should be reviewed"
-  description   = "Instances that are stopped may no longer need any volumes attached."
-  severity      = "low"
+  title       = "Volumes attached to stopped instances should be reviewed"
+  description = "Instances that are stopped may no longer need any volumes attached."
+  severity    = "low"
 
   sql = <<-EOT
     -- Listing core boot volumes and block volumes associated with running instances
@@ -89,9 +89,9 @@ control "core_boot_and_block_volume_attached_stopped_instance" {
 }
 
 control "core_boot_volume_low_usage" {
-  title         = "Boot volumes with low usage should be reviewed"
-  description   = "Boot volumes that are unused should be archived and deleted."
-  severity      = "low"
+  title       = "Boot volumes with low usage should be reviewed"
+  description = "Boot volumes that are unused should be archived and deleted."
+  severity    = "low"
 
   sql = <<-EOT
     with boot_volume_usage as (
@@ -172,9 +172,9 @@ control "core_instance_long_running" {
 }
 
 control "core_instance_low_utilization" {
-  title         = "Compute instances with low CPU utilization should be reviewed"
-  description   = "Resize or eliminate under utilized instances."
-  severity      = "low"
+  title       = "Compute instances with low CPU utilization should be reviewed"
+  description = "Resize or eliminate under utilized instances."
+  severity    = "low"
 
   sql = <<-EOT
     with core_instance_utilization as (
@@ -215,9 +215,9 @@ control "core_instance_low_utilization" {
 }
 
 control "core_public_ip_unattached" {
-  title         = "Unused reserved public IP addresses should be removed"
-  description   = "Unattached reserved public IP addresses cost money and should be released."
-  severity      = "low"
+  title       = "Unused reserved public IP addresses should be removed"
+  description = "Unattached reserved public IP addresses cost money and should be released."
+  severity    = "low"
 
   sql = <<-EOT
     select
@@ -292,9 +292,9 @@ control "core_volume_backup_age_90" {
 }
 
 control "core_volume_large" {
-  title         = "Volumes with over 100 GB should be resized if too large"
-  description   = "Large core volumes are unusual, expensive and should be reviewed."
-  severity      = "low"
+  title       = "Volumes with over 100 GB should be resized if too large"
+  description = "Large core volumes are unusual, expensive and should be reviewed."
+  severity    = "low"
 
   sql = <<-EOT
     with all_volumes_with_size as (
@@ -336,9 +336,9 @@ control "core_volume_large" {
 }
 
 control "core_volume_unattached" {
-  title         = "Volumes attached to stopped instances should be reviewed"
-  description   = "Instances that are stopped may no longer need any volumes attached."
-  severity      = "low"
+  title       = "Volumes attached to stopped instances should be reviewed"
+  description = "Instances that are stopped may no longer need any volumes attached."
+  severity    = "low"
 
   sql = <<-EOT
     with vols_with_instances as (
@@ -380,8 +380,8 @@ control "core_volume_unattached" {
         else 'ok'
       end as status,
       case
-        when v.volume_id is null then a.display_name ||  ' of size ' || a.size_in_gbs  || 'gb not attached.'
-        else a.display_name ||  ' of size ' || a.size_in_gbs  ||  'gb attached to instance.'
+        when v.volume_id is null then a.display_name || ' of size ' || a.size_in_gbs || 'gb not attached.'
+        else a.display_name || ' of size ' || a.size_in_gbs || 'gb attached to instance.'
       end as reason,
       a.region,
       coalesce(c.name, 'root') as compartment

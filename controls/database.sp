@@ -44,9 +44,9 @@ control "database_autonomous_database_age_90" {
 }
 
 control "database_autonomous_database_low_utilization" {
-  title         = "Autonomous databases with low CPU utilization should be reviewed"
-  description   = "Resize or eliminate under utilized autonomous databases."
-  severity      = "low"
+  title       = "Autonomous databases with low CPU utilization should be reviewed"
+  description = "Resize or eliminate under utilized autonomous databases."
+  severity    = "low"
 
   sql = <<-EOT
     with database_autonomous_database_utilization as (

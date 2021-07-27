@@ -43,9 +43,9 @@ control "mysql_db_system_age_90" {
 }
 
 control "mysql_db_system_low_connection_count" {
-  title         = "MySQL DB systems have fewer than 2 connections per day should be reviewed"
-  description   = "These DB systems have very little usage in last 30 days. Should this DB system be shutdown when not in use?"
-  severity      = "high"
+  title       = "MySQL DB systems have fewer than 2 connections per day should be reviewed"
+  description = "These DB systems have very little usage in last 30 days. Should this DB system be shutdown when not in use?"
+  severity    = "high"
 
   sql = <<-EOT
     with mysql_db_usage as (
