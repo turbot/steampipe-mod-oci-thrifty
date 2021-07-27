@@ -4,8 +4,8 @@ mod "oci_thrifty" {
   description   = "Are you a Thrifty Oracle Cloud Infrastructure developer? This Steampipe mod checks your OCI account(s) to check for unused and under utilized resources."
   color         = "#F80000"
   documentation = file("./docs/index.md")
-  icon          = "/images/mods/turbot/alicloud-thrifty.svg"
-  categories    = ["OCI", "cost", "thrifty", "public cloud"]
+  icon          = "/images/mods/turbot/oci-thrifty.svg"
+  categories    = ["oci", "cost", "thrifty", "public cloud"]
 
   opengraph {
     title       = "Thrifty mod for Oracle Cloud Infrastructure"
