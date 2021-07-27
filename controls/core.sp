@@ -100,27 +100,27 @@ control "core_boot_volume_low_usage" {
         id,
         round(avg(max)) as avg_max,
         count(max) as days
-        from (
-          select
-            compartment_id,
-            id,
-            cast(maximum as numeric) as max
-          from
-            oci_core_boot_volume_metric_read_ops_daily
-          where
-            date_part('day', now() - timestamp) <=30
+      from (
+        select
+          compartment_id,
+          id,
+          cast(maximum as numeric) as max
+        from
+          oci_core_boot_volume_metric_read_ops_daily
+        where
+          date_part('day', now() - timestamp) <=30
         union
-          select
-            compartment_id,
-            id,
-            cast(maximum as numeric) as max
-          from
-            oci_core_boot_volume_metric_write_ops_daily
-          where
-            date_part('day', now() - timestamp) <=30
-          ) as read_and_write_ops
-        group by 1,2
-      )
+        select
+          compartment_id,
+          id,
+          cast(maximum as numeric) as max
+        from
+          oci_core_boot_volume_metric_write_ops_daily
+        where
+          date_part('day', now() - timestamp) <=30
+      ) as read_and_write_ops
+      group by 1,2
+    )
     select
       b.id as resource,
       case

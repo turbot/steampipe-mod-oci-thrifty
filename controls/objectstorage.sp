@@ -29,8 +29,8 @@ control "objectstorage_bucket_without_lifecycle_policy" {
       end as status,
       case
         when object_lifecycle_policy ->> 'items' is null then a.title || ' has no lifecycle policy.'
-        when object_lifecycle_policy -> 'items' @> '[{"isEnabled": true}]' then a.title || ' has active lifecycle policy.'
-        else a.title || ' has no active lifecycle policy.'
+        when object_lifecycle_policy -> 'items' @> '[{"isEnabled": true}]' then a.title || ' has lifecycle policy.'
+        else a.title || ' has disabled lifecycle policy.'
       end as reason,
       a.region,
       coalesce(c.name, 'root') as compartment
