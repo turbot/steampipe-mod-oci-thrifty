@@ -2,7 +2,7 @@
 
 Thrifty developers eliminate their unused and under-utilized core resources.
 This benchmark focuses on finding resources that have not been restarted
-recently, have old backups, have unused public IPs or auto tune performance is disabled.
+recently, have old backups, have unused public IPs or auto-tune performance is disabled.
 
 ### Default Thresholds
 
