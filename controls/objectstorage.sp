@@ -5,8 +5,8 @@ locals {
 }
 
 benchmark "objectstorage" {
-  title         = "ObjectStorage Checks"
-  description   = "Thrifty developers ensure their object storage buckets have managed lifecycle policies."
+  title         = "Object Storage Checks"
+  description   = "Thrifty developers ensure their Object Storage buckets have managed lifecycle policies."
   documentation = file("./controls/docs/objectstorage.md")
   tags          = local.objectstorage_common_tags
   children = [
