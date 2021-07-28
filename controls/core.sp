@@ -278,7 +278,8 @@ control "core_volume_backup_age_90" {
         when a.time_created > current_timestamp - interval '90 days' then 'ok'
         else 'alarm'
       end as status,
-      a.display_name || ' created at ' || a.time_created || '.' as reason,
+      a.display_name || ' created ' || to_char(a.time_created , 'DD-Mon-YYYY') ||
+       ' (' || extract(day from current_timestamp - a.time_created) || ' days).' as reason,
       a.region,
       coalesce(c.name, 'root') as compartment
     from
