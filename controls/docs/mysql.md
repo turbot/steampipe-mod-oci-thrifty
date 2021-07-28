@@ -4,4 +4,4 @@ Thrifty developers checks old MySQL DB systems. This benchmark focuses on findin
 
 ### Default Thresholds
 
-- [MySQL DB system age threshold (90 Days)](https://github.com/turbot/steampipe-mod-oci-thrifty/blob/main/controls/mysql.sp#L26)
+- [MySQL DB system age threshold (90 Days)](https://hub.steampipe.io/mods/turbot/oci_thrifty/controls/control.mysql_db_system_age_90)

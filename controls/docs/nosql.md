@@ -4,4 +4,4 @@ Thrifty developers archive NoSQL tables with stale data. This benchmark focuses 
 
 ### Default Thresholds
 
-- [Stale table data threshold (90 Days)](https://github.com/turbot/steampipe-mod-oci-thrifty/blob/main/controls/nosql.sp#L26)
+- [Stale table data threshold (90 Days)](https://hub.steampipe.io/mods/turbot/oci_thrifty/controls/control.nosql_table_stale_data)

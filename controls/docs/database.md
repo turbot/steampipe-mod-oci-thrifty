@@ -4,4 +4,4 @@ Thrifty developers checks old autonomous databases. This benchmark focuses on fi
 
 ### Default Thresholds
 
-- [Autonomous database age threshold (90 Days)](https://github.com/turbot/steampipe-mod-oci-thrifty/blob/main/controls/databse.sp#L26)
+- [Autonomous database age threshold (90 Days)](https://hub.steampipe.io/mods/turbot/oci_thrifty/controls/control.database_autonomous_database_age_90)

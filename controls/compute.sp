@@ -1,28 +1,28 @@
 locals {
-  core_common_tags = merge(local.thrifty_common_tags, {
-    service = "core"
+  compute_common_tags = merge(local.thrifty_common_tags, {
+    service = "compute"
   })
 }
 
-benchmark "core" {
-  title         = "Core Checks"
-  description   = "Thrifty developers eliminate unused and under-utilized core resources."
-  documentation = file("./controls/docs/core.md")
-  tags          = local.core_common_tags
+benchmark "compute" {
+  title         = "Compute Checks"
+  description   = "Thrifty developers eliminate unused and under-utilized compute resources."
+  documentation = file("./controls/docs/compute.md")
+  tags          = local.compute_common_tags
   children = [
-    control.core_boot_and_block_volume_attached_stopped_instance,
-    control.core_boot_volume_low_usage,
-    control.core_instance_long_running,
-    control.core_instance_low_utilization,
-    control.core_public_ip_unattached,
-    control.core_volume_auto_tune_performance_enabled,
-    control.core_volume_backup_age_90,
-    control.core_volume_large,
-    control.core_volume_unattached,
+    control.compute_boot_and_block_volume_attached_stopped_instance,
+    control.compute_boot_volume_low_usage,
+    control.compute_instance_long_running,
+    control.compute_instance_low_utilization,
+    control.compute_public_ip_unattached,
+    control.compute_volume_auto_tune_performance_enabled,
+    control.compute_volume_backup_age_90,
+    control.compute_volume_large,
+    control.compute_volume_unattached,
   ]
 }
 
-control "core_boot_and_block_volume_attached_stopped_instance" {
+control "compute_boot_and_block_volume_attached_stopped_instance" {
   title       = "Volumes attached to stopped instances should be reviewed"
   description = "Instances that are stopped may no longer need any volumes attached."
   severity    = "low"
@@ -83,12 +83,12 @@ control "core_boot_and_block_volume_attached_stopped_instance" {
       left join oci_identity_compartment as c on c.id = a.compartment_id;
   EOT
 
-  tags = merge(local.core_common_tags, {
+  tags = merge(local.compute_common_tags, {
     class = "unused"
   })
 }
 
-control "core_boot_volume_low_usage" {
+control "compute_boot_volume_low_usage" {
   title       = "Boot volumes with low usage should be reviewed"
   description = "Boot volumes that are unused should be archived and deleted."
   severity    = "low"
@@ -137,12 +137,12 @@ control "core_boot_volume_low_usage" {
       left join oci_identity_compartment as c on c.id = b.compartment_id;
   EOT
 
-  tags = merge(local.core_common_tags, {
+  tags = merge(local.compute_common_tags, {
     class = "unused"
   })
 }
 
-control "core_instance_long_running" {
+control "compute_instance_long_running" {
   title       = "Long running compute instances should be reviewed"
   description = "Instances should ideally be ephemeral and rehydrated frequently, check why these instances have been running for so long."
   severity    = "low"
@@ -166,12 +166,12 @@ control "core_instance_long_running" {
       left join oci_identity_compartment as c on c.id = a.compartment_id;
   EOT
 
-  tags = merge(local.core_common_tags, {
+  tags = merge(local.compute_common_tags, {
     class = "deprecated"
   })
 }
 
-control "core_instance_low_utilization" {
+control "compute_instance_low_utilization" {
   title       = "Compute instances with low CPU utilization should be reviewed"
   description = "Resize or eliminate under utilized instances."
   severity    = "low"
@@ -209,12 +209,12 @@ control "core_instance_low_utilization" {
       left join oci_identity_compartment as c on c.id = i.compartment_id;
   EOT
 
-  tags = merge(local.core_common_tags, {
+  tags = merge(local.compute_common_tags, {
     class = "unused"
   })
 }
 
-control "core_public_ip_unattached" {
+control "compute_public_ip_unattached" {
   title       = "Unused reserved public IP addresses should be removed"
   description = "Unattached reserved public IP addresses cost money and should be released."
   severity    = "low"
@@ -233,12 +233,12 @@ control "core_public_ip_unattached" {
       left join oci_identity_compartment as c on c.id = a.compartment_id;
   EOT
 
-  tags = merge(local.core_common_tags, {
+  tags = merge(local.compute_common_tags, {
     class = "unused"
   })
 }
 
-control "core_volume_auto_tune_performance_enabled" {
+control "compute_volume_auto_tune_performance_enabled" {
   title       = "Block volume should be enabled with auto-tune for better performance"
   description = "Block volume auto-tune should be enabled for better performance."
   severity    = "low"
@@ -261,12 +261,12 @@ control "core_volume_auto_tune_performance_enabled" {
       left join oci_identity_compartment as c on c.id = a.compartment_id
   EOT
 
-  tags = merge(local.core_common_tags, {
+  tags = merge(local.compute_common_tags, {
     class = "deprecated"
   })
 }
 
-control "core_volume_backup_age_90" {
+control "compute_volume_backup_age_90" {
   title       = "Volume backup created over 90 days ago should be deleted if not required"
   description = "Old backups are likely unneeded and costly to maintain."
   severity    = "low"
@@ -287,12 +287,12 @@ control "core_volume_backup_age_90" {
       left join oci_identity_compartment as c on c.id = a.compartment_id;
   EOT
 
-  tags = merge(local.core_common_tags, {
+  tags = merge(local.compute_common_tags, {
     class = "deprecated"
   })
 }
 
-control "core_volume_large" {
+control "compute_volume_large" {
   title       = "Volumes with over 100 GB should be resized if too large"
   description = "Large core volumes are unusual, expensive and should be reviewed."
   severity    = "low"
@@ -331,12 +331,12 @@ control "core_volume_large" {
       left join oci_identity_compartment as c on c.id = a.compartment_id;
   EOT
 
-  tags = merge(local.core_common_tags, {
+  tags = merge(local.compute_common_tags, {
     class = "deprecated"
   })
 }
 
-control "core_volume_unattached" {
+control "compute_volume_unattached" {
   title       = "Volumes attached to stopped instances should be reviewed"
   description = "Instances that are stopped may no longer need any volumes attached."
   severity    = "low"
@@ -392,7 +392,7 @@ control "core_volume_unattached" {
       left join oci_identity_compartment as c on c.id = a.compartment_id;
   EOT
 
-  tags = merge(local.core_common_tags, {
+  tags = merge(local.compute_common_tags, {
     class = "unused"
   })
 }
