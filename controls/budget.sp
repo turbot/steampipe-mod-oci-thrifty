@@ -54,7 +54,7 @@ control "budget_alert_count" {
       c.lifecycle_state = 'ACTIVE';
   EOT
 
-  tags = merge(local.core_common_tags, {
+  tags = merge(local.budget_common_tags, {
     class = "managed"
   })
 }
