@@ -1,6 +1,6 @@
-## Thrifty Core Benchmark
+## Thrifty Compute Benchmark
 
-Thrifty developers eliminate their unused and under-utilized core resources.
+Thrifty developers eliminate their unused and under-utilized Compute resources.
 This benchmark focuses on finding resources that have not been restarted
 recently, have old backups, have unused public IPs or auto-tune performance is disabled.
 
