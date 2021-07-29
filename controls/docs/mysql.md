@@ -6,3 +6,4 @@ Thrifty developers checks old MySQL DB systems. This benchmark focuses on findin
 
 - [Very long running MySQL DB system threshold (90 Days)](https://hub.steampipe.io/mods/turbot/oci_thrifty/controls/control.mysql_db_system_age_90)
 - [Long running MySQL DB system threshold (30 Days)](https://hub.steampipe.io/mods/turbot/oci_thrifty/controls/control.mysql_db_system_age_90)
+- [Low connection threshold (2 Max connections per min)](https://hub.steampipe.io/mods/turbot/oci_thrifty/controls/control.mysql_db_system_low_connection_count)

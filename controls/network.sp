@@ -27,6 +27,7 @@ control "network_public_ip_unattached" {
         else 'ok'
       end as status,
       a.display_name || ' in ' || a.lifecycle_state || ' state.' as reason,
+      a.scope,
       coalesce(c.name, 'root') as compartment
     from
       oci_core_public_ip as a

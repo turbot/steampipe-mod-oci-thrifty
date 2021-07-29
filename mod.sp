@@ -10,6 +10,6 @@ mod "oci_thrifty" {
   opengraph {
     title       = "Thrifty mod for Oracle Cloud Infrastructure"
     description = "Are you a Thrifty Oracle Cloud Infrastructure dev? This Steampipe mod checks your OCI account(s) for unused and under-utilized resources."
-    #image       = "/images/mods/turbot/oci-thrifty-social-graphic.png"
+    image       = "/images/mods/turbot/oci-thrifty-social-graphic.png"
   }
 }
