@@ -238,8 +238,8 @@ control "boot_and_block_volume_large" {
 }
 
 control "boot_and_block_volume_unattached" {
-  title       = "Block and Boot volumes attached to stopped instances should be reviewed"
-  description = "Instances that are stopped may no longer need any volumes attached."
+  title       = "Block and Boot volumes not attached any instances should be reviewed"
+  description = "Volumes that are unattached may no longer need."
   severity    = "low"
 
   sql = <<-EOT
