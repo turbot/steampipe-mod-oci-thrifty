@@ -168,7 +168,7 @@ control "block_volume_auto_tune_performance_enabled" {
 }
 
 control "block_volume_backup_age_90" {
-  title       = "Blcok volume backup created over 90 days ago should be deleted if not required"
+  title       = "Block volume backup created over 90 days ago should be deleted if not required"
   description = "Old backups are likely unneeded and costly to maintain."
   severity    = "low"
 
