@@ -15,8 +15,8 @@ benchmark "budget" {
 }
 
 control "budget_alert_count" {
-  title       = "Check budget alert set for each compartment"
-  description = "Budget alert should be set for each compartment, including the root compartment, to monitor cost."
+  title       = "Budget alerts should be set for each compartment"
+  description = "Budget alerts should be set for each compartment, including the root compartment, to monitor costs."
   severity    = "low"
 
   sql = <<-EOT
