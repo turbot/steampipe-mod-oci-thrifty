@@ -39,7 +39,7 @@ steampipe check all
 
 Run a specific control:
 ```shell
-steampipe check control.core_instance_long_running
+steampipe check control.compute_instance_long_running
 ```
 
 ### Credentials
