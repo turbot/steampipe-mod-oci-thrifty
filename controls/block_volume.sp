@@ -140,8 +140,8 @@ control "boot_volume_low_usage" {
 }
 
 control "block_volume_auto_tune_performance_enabled" {
-  title       = "Block volume should be enabled with auto-tune for better performance"
-  description = "Block volume auto-tune should be enabled for better performance."
+  title       = "Block volumes should have auto-tune volume peformance enabled"
+  description = "Block volume auto-tune performance ensures the optimal performance setting is used based on whether the volume is attached or detached from an instance."
   severity    = "low"
 
   sql = <<-EOT
@@ -239,7 +239,7 @@ control "boot_and_block_volume_large" {
 
 control "boot_and_block_volume_unattached" {
   title       = "Block and Boot volumes not attached any instances should be reviewed"
-  description = "Volumes that are unattached may no longer need."
+  description = "Volumes that are unattached may no longer be needed."
   severity    = "low"
 
   sql = <<-EOT
