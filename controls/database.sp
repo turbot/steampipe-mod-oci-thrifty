@@ -16,8 +16,8 @@ benchmark "database" {
 }
 
 control "database_autonomous_database_age_90" {
-  title       = "Autonomous database created over 90 days ago should be reviewed"
-  description = "Autonomous database created over 90 days ago should be deleted if not required."
+  title       = "Autonomous databases created over 90 days ago should be reviewed"
+  description = "Autonomous databases created over 90 days ago should be deleted if not required."
   severity    = "low"
 
   sql = <<-EOT
