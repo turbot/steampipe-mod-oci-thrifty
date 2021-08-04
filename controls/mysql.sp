@@ -91,7 +91,7 @@ control "mysql_db_system_low_connection_count" {
 }
 
 control "mysql_db_system_low_usage" {
-  title       = "MySQL DB systems with less than 25% CPU utilization for last 30 days should be reviewed"
+  title       = "MySQL DB systems with low CPU utilization should be reviewed"
   description = "These DB systems have very little usage in last 30 days and should be shutdown when not in use."
   severity    = "high"
 
