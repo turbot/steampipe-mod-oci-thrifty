@@ -120,7 +120,9 @@ control "compute_instance_monitoring_enabled" {
     from
       oci_core_instance as v
       left join instance_monitoring as l on v.display_name = l.display_name
-      left join oci_identity_compartment as c on c.id = v.compartment_id;
+      left join oci_identity_compartment as c on c.id = v.compartment_id
+    where
+      v.lifecycle_state <> 'TERMINATED';
   EOT
 
   tags = merge(local.compute_common_tags, {
