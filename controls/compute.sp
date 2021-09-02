@@ -106,7 +106,6 @@ control "compute_instance_monitoring_enabled" {
         config ->> 'desiredState' = 'ENABLED'
     )
     select
-      -- Required Columns
       v.id as resource,
       case
         when l.display_name is null then 'alarm'
@@ -116,7 +115,6 @@ control "compute_instance_monitoring_enabled" {
         when l.display_name is null then v.title || ' logging not enabled.'
         else v.title || ' logging enabled.'
       end as reason,
-      -- Additional Dimensions
       v.region,
       coalesce(c.name, 'root') as compartment
     from
