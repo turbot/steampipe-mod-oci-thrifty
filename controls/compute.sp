@@ -11,7 +11,8 @@ benchmark "compute" {
   tags          = local.compute_common_tags
   children = [
     control.compute_instance_long_running,
-    control.compute_instance_low_utilization
+    control.compute_instance_low_utilization,
+    control.compute_instance_monitoring_enabled
   ]
 }
 
@@ -84,5 +85,47 @@ control "compute_instance_low_utilization" {
 
   tags = merge(local.compute_common_tags, {
     class = "unused"
+  })
+}
+
+control "compute_instance_monitoring_enabled" {
+  title       = "Compute instances should have monitoring enabled"
+  description = "The compute instance metrics provide data about the activity level and throughput of the instance. These metrics are required to use features such as autoscaling, metrics, alarms, and notifications with compute instances."
+  severity    = "low"
+
+  sql = <<-EOT
+      with instance_monitoring as (
+      select 
+        distinct display_name,
+        config
+      from 
+        oci_core_instance,
+        jsonb_array_elements(agent_config -> 'pluginsConfig') config
+      where
+        config ->> 'name' = 'Compute Instance Monitoring' and
+        config ->> 'desiredState' = 'ENABLED'
+    )
+    select
+      -- Required Columns
+      v.id as resource,
+      case
+        when l.display_name is null then 'alarm'
+        else 'ok'
+      end as status,
+      case
+        when l.display_name is null then v.title || ' logging not enabled.'
+        else v.title || ' logging enabled.'
+      end as reason,
+      -- Additional Dimensions
+      v.region,
+      coalesce(c.name, 'root') as compartment
+    from
+      oci_core_instance as v
+      left join instance_monitoring as l on v.display_name = l.display_name
+      left join oci_identity_compartment as c on c.id = v.compartment_id;
+  EOT
+
+  tags = merge(local.compute_common_tags, {
+    class = "managed"
   })
 }
