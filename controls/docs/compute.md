@@ -3,6 +3,8 @@
 Thrifty developers eliminate their unused and under-utilized core compute resources.
 This benchmark focuses on finding resources that have been older than thresholds days and low CPU utilization.
 
-### Default Thresholds
+### Variables
 
-- [Long running instance threshold (90 Days)](https://hub.steampipe.io/mods/turbot/oci_thrifty/controls/control.compute_instance_long_running)
+| Variable | Description | Default |
+| - | - | - |
+| compute_running_instance_age_max_days | The maximum number of days an instance can be running for. | 90 days |

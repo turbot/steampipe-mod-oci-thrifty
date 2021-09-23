@@ -1,3 +1,8 @@
+variable "compute_running_instance_age_max_days" {
+  type        = number
+  description = "The maximum number of days an instance can be running for."
+}
+
 locals {
   compute_common_tags = merge(local.thrifty_common_tags, {
     service = "compute"
@@ -25,7 +30,7 @@ control "compute_instance_long_running" {
       a.id as resource,
       case
         when a.lifecycle_state <> 'RUNNING' then 'skip'
-        when date_part('day', now() - a.time_created) > 90 then 'alarm'
+        when date_part('day', now() - a.time_created) > $1 then 'alarm'
         else 'ok'
       end as status,
       case
@@ -38,6 +43,10 @@ control "compute_instance_long_running" {
       oci_core_instance as a
       left join oci_identity_compartment as c on c.id = a.compartment_id;
   EOT
+
+  param "compute_running_instance_age_max_days" {
+    default = var.compute_running_instance_age_max_days
+  }
 
   tags = merge(local.compute_common_tags, {
     class = "deprecated"

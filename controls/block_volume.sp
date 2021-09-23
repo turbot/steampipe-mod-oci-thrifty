@@ -1,3 +1,13 @@
+variable "boot_and_block_volume_max_size_gb" {
+  type        = number
+  description = "The maximum size in GB allowed for boot an block volumes."
+}
+
+variable "block_volume_backup_age_max_days" {
+  type        = number
+  description = "The maximum number of days a volume backup can be retained for."
+}
+
 locals {
   block_volume_common_tags = merge(local.thrifty_common_tags, {
     service = "block_volume"
@@ -13,7 +23,7 @@ benchmark "block_volume" {
     control.boot_and_block_volume_attached_stopped_instance,
     control.boot_volume_low_usage,
     control.block_volume_auto_tune_performance_enabled,
-    control.block_volume_backup_age_90,
+    control.block_volume_backup_age,
     control.boot_and_block_volume_large,
     control.boot_and_block_volume_unattached,
   ]
@@ -140,7 +150,7 @@ control "boot_volume_low_usage" {
 }
 
 control "block_volume_auto_tune_performance_enabled" {
-  title       = "Block volumes should have auto-tune volume peformance enabled"
+  title       = "Block volumes should have auto-tune volume performance enabled"
   description = "Block volume auto-tune performance ensures the optimal performance setting is used based on whether the volume is attached or detached from an instance."
   severity    = "low"
 
@@ -167,8 +177,8 @@ control "block_volume_auto_tune_performance_enabled" {
   })
 }
 
-control "block_volume_backup_age_90" {
-  title       = "Block volume backup created over 90 days ago should be deleted if not required"
+control "block_volume_backup_age" {
+  title       = "Block volume backup created over ${var.block_volume_backup_age_max_days} days ago should be deleted if not required"
   description = "Old backups are likely unneeded and costly to maintain."
   severity    = "low"
 
@@ -176,7 +186,7 @@ control "block_volume_backup_age_90" {
     select
       a.id as resource,
       case
-        when a.time_created > current_timestamp - interval '90 days' then 'ok'
+        when a.time_created > current_timestamp - interval '$1 days' then 'ok'
         else 'alarm'
       end as status,
       a.display_name || ' created ' || to_char(a.time_created , 'DD-Mon-YYYY') ||
@@ -188,13 +198,17 @@ control "block_volume_backup_age_90" {
       left join oci_identity_compartment as c on c.id = a.compartment_id;
   EOT
 
+  param "block_volume_backup_age_max_days" {
+    default = var.block_volume_backup_age_max_days
+  }
+
   tags = merge(local.block_volume_common_tags, {
     class = "deprecated"
   })
 }
 
 control "boot_and_block_volume_large" {
-  title       = "Block and Boot volumes with over 100 GB should be resized if too large"
+  title       = "Block and Boot volumes with over ${var.boot_and_block_volume_max_size_gb} GB should be resized if too large"
   description = "Large core volumes are unusual, expensive and should be reviewed."
   severity    = "low"
 
@@ -221,7 +235,7 @@ control "boot_and_block_volume_large" {
     select
       a.id as resource,
       case
-        when a.size_in_gbs <= 100  then 'ok'
+        when a.size_in_gbs <= $1  then 'ok'
         else 'alarm'
       end as status,
         a.display_name || ' with size ' || a.size_in_gbs || ' gb.' as reason,
@@ -231,6 +245,10 @@ control "boot_and_block_volume_large" {
       all_volumes_with_size as a
       left join oci_identity_compartment as c on c.id = a.compartment_id;
   EOT
+
+  param "boot_and_block_volume_max_size_gb" {
+    default = var.boot_and_block_volume_max_size_gb
+  }
 
   tags = merge(local.block_volume_common_tags, {
     class = "deprecated"

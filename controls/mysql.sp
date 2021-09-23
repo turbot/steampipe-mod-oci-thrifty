@@ -1,3 +1,18 @@
+variable "mysql_db_system_age_max_days" {
+  type        = number
+  description = "The maximum number of days a MySQL DB system can be running for."
+}
+
+variable "mysql_db_system_age_warning_days" {
+  type        = number
+  description = "The maximum number of days set as warning threshold for a DB system."
+}
+
+variable "mysql_db_system_min_connection_per_day" {
+  type        = number
+  description = "The minimum number of connections/day a DB system can be processed."
+}
+
 locals {
   mysql_common_tags = merge(local.thrifty_common_tags, {
     service = "mysql"
@@ -10,23 +25,23 @@ benchmark "mysql" {
   documentation = file("./controls/docs/mysql.md")
   tags          = local.mysql_common_tags
   children = [
-    control.mysql_db_system_age_90,
+    control.mysql_db_system_age,
     control.mysql_db_system_low_connection_count,
     control.mysql_db_system_low_usage
   ]
 }
 
-control "mysql_db_system_age_90" {
-  title       = "MySQL DB systems created over 90 days ago should be reviewed"
-  description = "MySQL DB systems created over 90 days ago should be reviewed and deleted if not required."
+control "mysql_db_system_age" {
+  title       = "MySQL DB systems created over ${var.mysql_db_system_age_max_days} days ago should be reviewed"
+  description = "MySQL DB systems created over ${var.mysql_db_system_age_max_days} days ago should be reviewed and deleted if not required."
   severity    = "low"
 
   sql = <<-EOT
     select
       a.id as resource,
       case
-        when date_part('day', now()-a.time_created) > 90 then 'alarm'
-        when date_part('day', now()-a.time_created) > 30 then 'info'
+        when date_part('day', now()-a.time_created) > $1 then 'alarm'
+        when date_part('day', now()-a.time_created) > $2 then 'info'
         else 'ok'
       end as status,
       a.title || ' has been in use for ' || date_part('day', now()-a.time_created) || ' days.' as reason,
@@ -39,13 +54,21 @@ control "mysql_db_system_age_90" {
       a.lifecycle_state <> 'DELETED';
   EOT
 
+  param "mysql_db_system_age_max_days" {
+    default = var.mysql_db_system_age_max_days
+  }
+
+  param "mysql_db_system_age_warning_days" {
+    default = var.mysql_db_system_age_warning_days
+  }
+
   tags = merge(local.mysql_common_tags, {
     class = "deprecated"
   })
 }
 
 control "mysql_db_system_low_connection_count" {
-  title       = "MySQL DB systems with fewer than 2 connections per day should be reviewed"
+  title       = "MySQL DB systems with fewer than ${var.mysql_db_system_min_connection_per_day} connections per day should be reviewed"
   description = "These DB systems have very little usage in last 30 days and should be shutdown when not in use."
   severity    = "high"
 
@@ -67,7 +90,7 @@ control "mysql_db_system_low_connection_count" {
       case
         when u.avg_max is null then 'error'
         when u.avg_max = 0 then 'alarm'
-        when u.avg_max < 2 then 'info'
+        when u.avg_max < $1 then 'info'
         else 'ok'
       end as status,
       case
@@ -84,6 +107,10 @@ control "mysql_db_system_low_connection_count" {
     where
       m.lifecycle_state <> 'DELETED';
   EOT
+
+  param "mysql_db_system_min_connection_per_day" {
+    default = var.mysql_db_system_min_connection_per_day
+  }
 
   tags = merge(local.mysql_common_tags, {
     class = "unused"

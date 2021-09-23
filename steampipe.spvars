@@ -1,0 +1,18 @@
+# Compute
+compute_running_instance_age_max_days = 90
+
+# Database
+autonomous_database_age_max_days = 90
+autonomous_database_age_warning_days = 30
+
+# MySQL
+mysql_db_system_age_max_days = 90
+mysql_db_system_age_warning_days = 30
+mysql_db_system_min_connection_per_day = 2
+
+# NoSQL
+nosql_table_stale_data_max_days = 90
+
+# Storage
+boot_and_block_volume_max_size_gb = 100
+block_volume_backup_age_max_days = 90
