@@ -7,7 +7,7 @@ locals {
 benchmark "network" {
   title         = "Network Checks"
   description   = "Thrifty developers eliminate unused and under-utilized network resources."
-  documentation = file("./controls/docs/compute.md")
+  documentation = file("./controls/docs/network.md")
   tags          = local.network_common_tags
   children = [
     control.network_public_ip_unattached
@@ -34,7 +34,7 @@ control "network_public_ip_unattached" {
       left join oci_identity_compartment as c on c.id = a.compartment_id;
   EOT
 
-  tags = merge(local.compute_common_tags, {
+  tags = merge(local.network_common_tags, {
     class = "unused"
   })
 }

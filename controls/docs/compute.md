@@ -7,4 +7,4 @@ This benchmark focuses on finding resources that have been older than thresholds
 
 | Variable | Description | Default |
 | - | - | - |
-| compute_running_instance_age_max_days | The maximum number of days an instance can be running for. | 90 days |
+| compute_running_instance_age_max_days | The maximum number of days an instance is allowed to run. | 90 days |

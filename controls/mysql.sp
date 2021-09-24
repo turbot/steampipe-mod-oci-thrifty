@@ -1,16 +1,16 @@
 variable "mysql_db_system_age_max_days" {
   type        = number
-  description = "The maximum number of days a MySQL DB system can be running for."
+  description = "The maximum number of days a MySQL DB system is allowed to run."
 }
 
 variable "mysql_db_system_age_warning_days" {
   type        = number
-  description = "The maximum number of days set as warning threshold for a DB system."
+  description = "The number of days after which a DB system set a warning."
 }
 
-variable "mysql_db_system_min_connection_per_day" {
+variable "mysql_db_system_min_connections_per_day" {
   type        = number
-  description = "The minimum number of connections/day a DB system can be processed."
+  description = "The minimum number of client sessions that are connected per day to the DB system."
 }
 
 locals {
@@ -68,7 +68,7 @@ control "mysql_db_system_age" {
 }
 
 control "mysql_db_system_low_connection_count" {
-  title       = "MySQL DB systems with fewer than ${var.mysql_db_system_min_connection_per_day} connections per day should be reviewed"
+  title       = "MySQL DB systems with fewer than ${var.mysql_db_system_min_connections_per_day} connections per day should be reviewed"
   description = "These DB systems have very little usage in last 30 days and should be shutdown when not in use."
   severity    = "high"
 
@@ -108,8 +108,8 @@ control "mysql_db_system_low_connection_count" {
       m.lifecycle_state <> 'DELETED';
   EOT
 
-  param "mysql_db_system_min_connection_per_day" {
-    default = var.mysql_db_system_min_connection_per_day
+  param "mysql_db_system_min_connections_per_day" {
+    default = var.mysql_db_system_min_connections_per_day
   }
 
   tags = merge(local.mysql_common_tags, {

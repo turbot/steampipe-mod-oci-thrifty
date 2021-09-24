@@ -1,6 +1,6 @@
 variable "compute_running_instance_age_max_days" {
   type        = number
-  description = "The maximum number of days an instance can be running for."
+  description = "The maximum number of days an instance is allowed to run."
 }
 
 locals {

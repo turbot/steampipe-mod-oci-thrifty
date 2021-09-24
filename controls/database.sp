@@ -1,11 +1,11 @@
 variable "autonomous_database_age_max_days" {
   type        = number
-  description = "The maximum number of days an autonomous database can be running for."
+  description = "The maximum number of days an autonomous database is allowed to run."
 }
 
 variable "autonomous_database_age_warning_days" {
   type        = number
-  description = "The maximum number of days set as warning threshold for an autonomous database."
+  description = "The number of days after which an autonomous database set a warning."
 }
 
 locals {

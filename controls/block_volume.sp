@@ -1,11 +1,11 @@
 variable "boot_and_block_volume_max_size_gb" {
   type        = number
-  description = "The maximum size in GB allowed for boot an block volumes."
+  description = "The maximum size in GB allowed for boot and block volumes."
 }
 
 variable "block_volume_backup_age_max_days" {
   type        = number
-  description = "The maximum number of days a volume backup can be retained for."
+  description = "The maximum number of days a volume backup can be retained."
 }
 
 locals {
