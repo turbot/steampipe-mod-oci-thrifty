@@ -28,7 +28,7 @@ steampipe plugin install oci
 
 Clone:
 ```sh
-git clone git@github.com:turbot/steampipe-mod-oci-thrifty
+git clone https://github.com/turbot/steampipe-mod-oci-thrifty.git
 cd steampipe-mod-oci-thrifty
 ```
 
