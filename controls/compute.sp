@@ -112,7 +112,7 @@ control "compute_instance_monitoring_enabled" {
         else 'ok'
       end as status,
       case
-        when l.display_name is null then v.title || ' logging not enabled.'
+        when l.display_name is null then v.title || ' logging disabled.'
         else v.title || ' logging enabled.'
       end as reason,
       v.region,
