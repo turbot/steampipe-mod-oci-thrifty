@@ -1,4 +1,4 @@
-## v0.2 [2021-09-21]
+## v0.2 [2021-09-27]
 
 _What's new?_
 
@@ -11,8 +11,7 @@ _Enhancements_
 
 _Bug fixes_
 
-- `block_volume_auto_tune_performance_enabled` control will no longer query terminated block volumes
-- Minor document fixes
+- `block_volume_auto_tune_performance_enabled` control will now skip terminated block volumes
 
 ## v0.1 [2021-08-04]
 
