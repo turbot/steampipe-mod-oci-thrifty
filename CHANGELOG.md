@@ -11,7 +11,7 @@ _Enhancements_
 
 _Bug fixes_
 
-- `block_volume_auto_tune_performance_enabled` control will now skip terminated block volumes
+- `block_volume_auto_tune_performance_enabled` control will no longer evaluate terminated block volumes
 
 ## v0.1 [2021-08-04]
 
