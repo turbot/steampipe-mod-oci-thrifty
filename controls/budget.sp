@@ -10,7 +10,7 @@ benchmark "budget" {
   documentation = file("./controls/docs/budget.md")
   tags          = local.budget_common_tags
   children = [
-    control.budget_alert_count,
+    control.budget_alert_count
   ]
 }
 

@@ -15,7 +15,7 @@ benchmark "nosql" {
   documentation = file("./controls/docs/nosql.md")
   tags          = local.nosql_common_tags
   children = [
-    control.nosql_table_stale_data,
+    control.nosql_table_stale_data
   ]
 }
 

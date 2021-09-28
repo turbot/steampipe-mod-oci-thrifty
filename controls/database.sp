@@ -30,8 +30,8 @@ benchmark "database" {
   documentation = file("./controls/docs/database.md")
   tags          = local.database_common_tags
   children = [
-    control.database_autonomous_database_max_age,
-    control.database_autonomous_database_low_utilization
+    control.database_autonomous_database_low_utilization,
+    control.database_autonomous_database_max_age
   ]
 }
 

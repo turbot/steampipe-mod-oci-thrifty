@@ -30,12 +30,12 @@ benchmark "block_volume" {
   documentation = file("./controls/docs/compute.md")
   tags          = local.block_volume_common_tags
   children = [
-    control.boot_and_block_volume_attached_stopped_instance,
-    control.boot_volume_low_usage,
     control.block_volume_auto_tune_performance_enabled,
     control.block_volume_backup_max_age,
+    control.boot_and_block_volume_attached_stopped_instance,
     control.boot_and_block_volume_large,
     control.boot_and_block_volume_unattached,
+    control.boot_volume_low_usage
   ]
 }
 
