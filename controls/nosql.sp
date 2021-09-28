@@ -1,6 +1,6 @@
 variable "nosql_table_stale_data_max_days" {
   type        = number
-  description = "The maximum number of days tables are allowed to have stale data."
+  description = "The maximum number of days table data can be unchanged before it is considered stale."
 }
 
 locals {
@@ -21,7 +21,7 @@ benchmark "nosql" {
 
 control "nosql_table_stale_data" {
   title       = "NoSQL tables with stale data should be reviewed"
-  description = "If the data has not changed in ${var.nosql_table_stale_data_max_days} days, the table should be reviewed."
+  description = "If the data has not changed recently and has become stale, the table should be reviewed."
   severity    = "low"
 
   sql = <<-EOT
@@ -40,7 +40,8 @@ control "nosql_table_stale_data" {
   EOT
 
   param "nosql_table_stale_data_max_days" {
-    default = var.nosql_table_stale_data_max_days
+    description = "The maximum number of days table data can be unchanged before it is considered stale."
+    default     = var.nosql_table_stale_data_max_days
   }
 
   tags = merge(local.nosql_common_tags, {

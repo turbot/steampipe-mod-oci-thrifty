@@ -3,6 +3,16 @@ variable "compute_running_instance_age_max_days" {
   description = "The maximum number of days an instance is allowed to run."
 }
 
+variable "compute_instance_avg_cpu_utilization_low" {
+  type        = number
+  description = "The average CPU utilization required for instances to be considered infrequently used. This value should be lower than compute_instance_avg_cpu_utilization_high."
+}
+
+variable "compute_instance_avg_cpu_utilization_high" {
+  type        = number
+  description = "The average CPU utilization required for instances to be considered frequently used. This value should be higher than compute_instance_avg_cpu_utilization_low."
+}
+
 locals {
   compute_common_tags = merge(local.thrifty_common_tags, {
     service = "compute"
@@ -46,7 +56,8 @@ control "compute_instance_long_running" {
   EOT
 
   param "compute_running_instance_age_max_days" {
-    default = var.compute_running_instance_age_max_days
+    description = "The maximum number of days an instance is allowed to run."
+    default     = var.compute_running_instance_age_max_days
   }
 
   tags = merge(local.compute_common_tags, {
@@ -76,8 +87,8 @@ control "compute_instance_low_utilization" {
       i.id as resource,
       case
         when avg_max is null then 'error'
-        when avg_max < 20 then 'alarm'
-        when avg_max < 35 then 'info'
+        when avg_max < $1 then 'alarm'
+        when avg_max < $2 then 'info'
         else 'ok'
       end as status,
       case
@@ -91,6 +102,16 @@ control "compute_instance_low_utilization" {
       left join core_instance_utilization as u on u.id = i.id
       left join oci_identity_compartment as c on c.id = i.compartment_id;
   EOT
+
+  param "compute_instance_avg_cpu_utilization_low" {
+    description = "The average CPU utilization required for instances to be considered infrequently used. This value should be lower than compute_instance_avg_cpu_utilization_high."
+    default     = var.compute_instance_avg_cpu_utilization_low
+  }
+
+  param "compute_instance_avg_cpu_utilization_high" {
+    description = "The average CPU utilization required for instances to be considered frequently used. This value should be higher than compute_instance_avg_cpu_utilization_low."
+    default     = var.compute_instance_avg_cpu_utilization_high
+  }
 
   tags = merge(local.compute_common_tags, {
     class = "unused"
@@ -109,10 +130,10 @@ control "compute_instance_monitoring_enabled" {
         config
       from 
         oci_core_instance,
-        jsonb_array_elements(agent_config -> 'pluginsConfig') config
+        jsonb_array_elements(agent_config -> 'pluginsConfig') as config
       where
-        config ->> 'name' = 'Compute Instance Monitoring' and
-        config ->> 'desiredState' = 'ENABLED'
+        config ->> 'name' = 'Compute Instance Monitoring'
+        and config ->> 'desiredState' = 'ENABLED'
     )
     select
       v.id as resource,

@@ -5,12 +5,22 @@ variable "mysql_db_system_age_max_days" {
 
 variable "mysql_db_system_age_warning_days" {
   type        = number
-  description = "The number of days after which a DB system set a warning."
+  description = "The number of days after which a MySQL DB system set a warning."
 }
 
-variable "mysql_db_system_min_connections_per_day" {
+variable "mysql_db_system_avg_connections" {
   type        = number
-  description = "The minimum number of client sessions that are connected per day to the DB system."
+  description = "The minimum number of average connections per day required for DB systems to be considered in-use."
+}
+
+variable "mysql_db_system_avg_cpu_utilization_low" {
+  type        = number
+  description = "The average CPU utilization required for DB systems to be considered infrequently used. This value should be lower than mysql_db_system_avg_cpu_utilization_high."
+}
+
+variable "mysql_db_system_avg_cpu_utilization_high" {
+  type        = number
+  description = "The average CPU utilization required for DB systems to be considered frequently used. This value should be higher than mysql_db_system_avg_cpu_utilization_low."
 }
 
 locals {
@@ -32,8 +42,8 @@ benchmark "mysql" {
 }
 
 control "mysql_db_system_age" {
-  title       = "MySQL DB systems created over ${var.mysql_db_system_age_max_days} days ago should be reviewed"
-  description = "MySQL DB systems created over ${var.mysql_db_system_age_max_days} days ago should be reviewed and deleted if not required."
+  title       = "Old MySQL DB systems should be reviewed"
+  description = "Old MySQL DB systems should be reviewed and deleted if not required."
   severity    = "low"
 
   sql = <<-EOT
@@ -55,11 +65,13 @@ control "mysql_db_system_age" {
   EOT
 
   param "mysql_db_system_age_max_days" {
-    default = var.mysql_db_system_age_max_days
+    description = "The maximum number of days a MySQL DB system is allowed to run."
+    default     = var.mysql_db_system_age_max_days
   }
 
   param "mysql_db_system_age_warning_days" {
-    default = var.mysql_db_system_age_warning_days
+    description = "The number of days after which a MySQL DB system set a warning."
+    default     = var.mysql_db_system_age_warning_days
   }
 
   tags = merge(local.mysql_common_tags, {
@@ -68,7 +80,7 @@ control "mysql_db_system_age" {
 }
 
 control "mysql_db_system_low_connection_count" {
-  title       = "MySQL DB systems with fewer than ${var.mysql_db_system_min_connections_per_day} connections per day should be reviewed"
+  title       = "MySQL DB systems with a low number connections per day should be reviewed"
   description = "These DB systems have very little usage in last 30 days and should be shutdown when not in use."
   severity    = "high"
 
@@ -108,8 +120,9 @@ control "mysql_db_system_low_connection_count" {
       m.lifecycle_state <> 'DELETED';
   EOT
 
-  param "mysql_db_system_min_connections_per_day" {
-    default = var.mysql_db_system_min_connections_per_day
+  param "mysql_db_system_avg_connections" {
+    description = "The minimum number of average connections per day required for DB systems to be considered in-use."
+    default     = var.mysql_db_system_avg_connections
   }
 
   tags = merge(local.mysql_common_tags, {
@@ -156,6 +169,16 @@ control "mysql_db_system_low_usage" {
       left join oci_identity_compartment as c on c.id = i.compartment_id
     where i.lifecycle_state <> 'DELETED';
   EOT
+
+  param "mysql_db_system_avg_cpu_utilization_low" {
+    description = "The average CPU utilization required for DB systems to be considered infrequently used. This value should be lower than mysql_db_system_avg_cpu_utilization_high."
+    default     = var.mysql_db_system_avg_cpu_utilization_low
+  }
+
+  param "mysql_db_system_avg_cpu_utilization_high" {
+    description = "The average CPU utilization required for DB systems to be considered frequently used. This value should be higher than mysql_db_system_avg_cpu_utilization_low."
+    default     = var.mysql_db_system_avg_cpu_utilization_high
+  }
 
   tags = merge(local.mysql_common_tags, {
     class = "unused"

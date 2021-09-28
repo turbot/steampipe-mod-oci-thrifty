@@ -1,18 +1,26 @@
+# Block Volume
+boot_and_block_volume_max_size_gb = 100
+boot_volume_avg_read_write_ops_low = 100
+boot_volume_avg_read_write_ops_high = 500
+block_volume_backup_age_max_days = 90
+
 # Compute
 compute_running_instance_age_max_days = 90
+compute_instance_avg_cpu_utilization_low = 20
+compute_instance_avg_cpu_utilization_high = 35
 
 # Database
 autonomous_database_age_max_days = 90
 autonomous_database_age_warning_days = 30
+autonomous_database_avg_cpu_utilization_low = 20
+autonomous_database_avg_cpu_utilization_high = 35
 
 # MySQL
 mysql_db_system_age_max_days = 90
 mysql_db_system_age_warning_days = 30
-mysql_db_system_min_connections_per_day = 2
+mysql_db_system_avg_connections = 2
+mysql_db_system_avg_cpu_utilization_low = 25
+mysql_db_system_avg_cpu_utilization_high = 50
 
 # NoSQL
 nosql_table_stale_data_max_days = 90
-
-# Storage
-boot_and_block_volume_max_size_gb = 100
-block_volume_backup_age_max_days = 90

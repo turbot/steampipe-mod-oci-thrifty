@@ -1,11 +1,21 @@
-variable "boot_and_block_volume_max_size_gb" {
+variable "boot_volume_avg_read_write_ops_low" {
   type        = number
-  description = "The maximum size in GB allowed for boot and block volumes."
+  description = "The number of average read/write ops required for boot volumes to be considered infrequently used. This value should be lower than boot_volume_avg_read_write_ops_high."
+}
+
+variable "boot_volume_avg_read_write_ops_high" {
+  type        = number
+  description = "The number of average read/write ops required for boot volumes to be considered frequently used. This value should be higher than boot_volume_avg_read_write_ops_low."
 }
 
 variable "block_volume_backup_age_max_days" {
   type        = number
-  description = "The maximum number of days a volume backup can be retained."
+  description = "The maximum number of days volume backups can be retained."
+}
+
+variable "boot_and_block_volume_max_size_gb" {
+  type        = number
+  description = "The maximum size (GB) allowed for boot and block volumes."
 }
 
 locals {
@@ -23,7 +33,7 @@ benchmark "block_volume" {
     control.boot_and_block_volume_attached_stopped_instance,
     control.boot_volume_low_usage,
     control.block_volume_auto_tune_performance_enabled,
-    control.block_volume_backup_age,
+    control.block_volume_backup_max_age,
     control.boot_and_block_volume_large,
     control.boot_and_block_volume_unattached,
   ]
@@ -131,8 +141,8 @@ control "boot_volume_low_usage" {
     select
       b.id as resource,
       case
-        when b.avg_max <= 100 then 'alarm'
-        when b.avg_max <= 500 then 'info'
+        when b.avg_max <= $1 then 'alarm'
+        when b.avg_max <= $2 then 'info'
         else 'ok'
       end as status,
       v.display_name || ' averaging ' || b.avg_max || ' read and write ops over the last ' || b.days || ' days.' as reason,
@@ -143,6 +153,16 @@ control "boot_volume_low_usage" {
       left join oci_core_boot_volume as v on b.id = v.id
       left join oci_identity_compartment as c on c.id = b.compartment_id;
   EOT
+
+  param "boot_volume_avg_read_write_ops_low" {
+    description = "The number of average read/write ops required for disks to be considered infrequently used. This value should be lower than boot_volume_avg_read_write_ops_high."
+    default     = var.boot_volume_avg_read_write_ops_low
+  }
+
+  param "boot_volume_avg_read_write_ops_high" {
+    description = "The number of average read/write ops required for disks to be considered frequently used. This value should be higher than boot_volume_avg_read_write_ops_low."
+    default     = var.boot_volume_avg_read_write_ops_high
+  }
 
   tags = merge(local.block_volume_common_tags, {
     class = "unused"
@@ -178,8 +198,8 @@ control "block_volume_auto_tune_performance_enabled" {
   })
 }
 
-control "block_volume_backup_age" {
-  title       = "Block volume backup created over ${var.block_volume_backup_age_max_days} days ago should be deleted if not required"
+control "block_volume_backup_max_age" {
+  title       = "Old block volume backups should be deleted if not required"
   description = "Old backups are likely unneeded and costly to maintain."
   severity    = "low"
 
@@ -200,7 +220,8 @@ control "block_volume_backup_age" {
   EOT
 
   param "block_volume_backup_age_max_days" {
-    default = var.block_volume_backup_age_max_days
+    description = "The maximum number of days volume backups can be retained."
+    default     = var.block_volume_backup_age_max_days
   }
 
   tags = merge(local.block_volume_common_tags, {
@@ -209,7 +230,7 @@ control "block_volume_backup_age" {
 }
 
 control "boot_and_block_volume_large" {
-  title       = "Block and Boot volumes with over ${var.boot_and_block_volume_max_size_gb} GB should be resized if too large"
+  title       = "Block and Boot volumes should be resized if too large"
   description = "Large core volumes are unusual, expensive and should be reviewed."
   severity    = "low"
 
@@ -251,7 +272,8 @@ control "boot_and_block_volume_large" {
   EOT
 
   param "boot_and_block_volume_max_size_gb" {
-    default = var.boot_and_block_volume_max_size_gb
+    description = "The maximum size (GB) allowed for boot and block volumes."
+    default     = var.boot_and_block_volume_max_size_gb
   }
 
   tags = merge(local.block_volume_common_tags, {

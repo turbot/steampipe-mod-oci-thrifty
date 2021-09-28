@@ -8,6 +8,16 @@ variable "autonomous_database_age_warning_days" {
   description = "The number of days after which an autonomous database set a warning."
 }
 
+variable "autonomous_database_avg_cpu_utilization_low" {
+  type        = number
+  description = "The average CPU utilization required for autonomous databases to be considered infrequently used. This value should be lower than autonomous_database_avg_cpu_utilization_high."
+}
+
+variable "autonomous_database_avg_cpu_utilization_high" {
+  type        = number
+  description = "The average CPU utilization required for autonomous databases to be considered frequently used. This value should be higher than autonomous_database_avg_cpu_utilization_low."
+}
+
 locals {
   database_common_tags = merge(local.thrifty_common_tags, {
     service = "database"
@@ -20,14 +30,14 @@ benchmark "database" {
   documentation = file("./controls/docs/database.md")
   tags          = local.database_common_tags
   children = [
-    control.database_autonomous_database_age,
+    control.database_autonomous_database_max_age,
     control.database_autonomous_database_low_utilization
   ]
 }
 
-control "database_autonomous_database_age" {
-  title       = "Autonomous databases created over ${var.autonomous_database_age_max_days} days ago should be reviewed"
-  description = "Autonomous databases created over ${var.autonomous_database_age_max_days} days ago should be deleted if not required."
+control "database_autonomous_database_max_age" {
+  title       = "Old Autonomous databases should be reviewed"
+  description = "Old autonomous databases should be deleted if not required."
   severity    = "low"
 
   sql = <<-EOT
@@ -49,11 +59,13 @@ control "database_autonomous_database_age" {
   EOT
 
   param "autonomous_database_age_max_days" {
-    default = var.autonomous_database_age_max_days
+    description = "The maximum number of days an autonomous database is allowed to run."
+    default     = var.autonomous_database_age_max_days
   }
 
   param "autonomous_database_age_warning_days" {
-    default = var.autonomous_database_age_warning_days
+    description = "The number of days after which an autonomous database set a warning."
+    default     = var.autonomous_database_age_warning_days
   }
 
   tags = merge(local.database_common_tags, {
@@ -82,8 +94,8 @@ control "database_autonomous_database_low_utilization" {
       i.id as resource,
       case
         when avg_max is null then 'error'
-        when avg_max < 20 then 'alarm'
-        when avg_max < 35 then 'info'
+        when avg_max < $1 then 'alarm'
+        when avg_max < $2 then 'info'
         else 'ok'
       end as status,
       case
@@ -97,6 +109,16 @@ control "database_autonomous_database_low_utilization" {
       left join database_autonomous_database_utilization as u on u.id = i.id
       left join oci_identity_compartment as c on c.id = i.compartment_id;
   EOT
+
+  param "autonomous_database_avg_cpu_utilization_low" {
+    description = "The average CPU utilization required for autonomous databases to be considered infrequently used. This value should be lower than autonomous_database_avg_cpu_utilization_high."
+    default     = var.autonomous_database_avg_cpu_utilization_low
+  }
+
+  param "autonomous_database_avg_cpu_utilization_high" {
+    description = "The average CPU utilization required for autonomous databases to be considered frequently used. This value should be higher than autonomous_database_avg_cpu_utilization_low."
+    default     = var.autonomous_database_avg_cpu_utilization_high
+  }
 
   tags = merge(local.database_common_tags, {
     class = "unused"
