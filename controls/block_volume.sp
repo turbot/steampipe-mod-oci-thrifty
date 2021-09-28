@@ -170,6 +170,7 @@ control "block_volume_auto_tune_performance_enabled" {
     from
       oci_core_volume as a
       left join oci_identity_compartment as c on c.id = a.compartment_id
+    where a.lifecycle_state <> 'TERMINATED';
   EOT
 
   tags = merge(local.block_volume_common_tags, {
@@ -219,6 +220,7 @@ control "boot_and_block_volume_large" {
         compartment_id,
         region,
         display_name,
+        lifecycle_state,
         size_in_gbs
       from
         oci_core_volume
@@ -228,6 +230,7 @@ control "boot_and_block_volume_large" {
         compartment_id,
         region,
         display_name,
+        lifecycle_state,
         size_in_gbs
       from
         oci_core_boot_volume
@@ -243,7 +246,8 @@ control "boot_and_block_volume_large" {
         coalesce(c.name, 'root') as compartment
     from
       all_volumes_with_size as a
-      left join oci_identity_compartment as c on c.id = a.compartment_id;
+      left join oci_identity_compartment as c on c.id = a.compartment_id
+    where a.lifecycle_state <> 'TERMINATED';
   EOT
 
   param "boot_and_block_volume_max_size_gb" {
