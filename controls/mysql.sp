@@ -1,3 +1,28 @@
+variable "mysql_db_system_age_max_days" {
+  type        = number
+  description = "The maximum number of days DB systems are allowed to run."
+}
+
+variable "mysql_db_system_age_warning_days" {
+  type        = number
+  description = "The number of days DB systems can be running before sending a warning."
+}
+
+variable "mysql_db_system_avg_connections" {
+  type        = number
+  description = "The minimum number of average connections per day required for DB systems to be considered in-use."
+}
+
+variable "mysql_db_system_avg_cpu_utilization_high" {
+  type        = number
+  description = "The average CPU utilization required for DB systems to be considered frequently used. This value should be higher than mysql_db_system_avg_cpu_utilization_low."
+}
+
+variable "mysql_db_system_avg_cpu_utilization_low" {
+  type        = number
+  description = "The average CPU utilization required for DB systems to be considered infrequently used. This value should be lower than mysql_db_system_avg_cpu_utilization_high."
+}
+
 locals {
   mysql_common_tags = merge(local.thrifty_common_tags, {
     service = "mysql"
@@ -10,23 +35,23 @@ benchmark "mysql" {
   documentation = file("./controls/docs/mysql.md")
   tags          = local.mysql_common_tags
   children = [
-    control.mysql_db_system_age_90,
+    control.mysql_db_system_age,
     control.mysql_db_system_low_connection_count,
     control.mysql_db_system_low_usage
   ]
 }
 
-control "mysql_db_system_age_90" {
-  title       = "MySQL DB systems created over 90 days ago should be reviewed"
-  description = "MySQL DB systems created over 90 days ago should be reviewed and deleted if not required."
+control "mysql_db_system_age" {
+  title       = "Old MySQL DB systems should be reviewed"
+  description = "Old MySQL DB systems should be reviewed and deleted if not required."
   severity    = "low"
 
   sql = <<-EOT
     select
       a.id as resource,
       case
-        when date_part('day', now()-a.time_created) > 90 then 'alarm'
-        when date_part('day', now()-a.time_created) > 30 then 'info'
+        when date_part('day', now()-a.time_created) > $1 then 'alarm'
+        when date_part('day', now()-a.time_created) > $2 then 'info'
         else 'ok'
       end as status,
       a.title || ' has been in use for ' || date_part('day', now()-a.time_created) || ' days.' as reason,
@@ -39,13 +64,23 @@ control "mysql_db_system_age_90" {
       a.lifecycle_state <> 'DELETED';
   EOT
 
+  param "mysql_db_system_age_max_days" {
+    description = "The maximum number of days DB systems are allowed to run."
+    default     = var.mysql_db_system_age_max_days
+  }
+
+  param "mysql_db_system_age_warning_days" {
+    description = "The number of days DB systems can be running before sending a warning."
+    default     = var.mysql_db_system_age_warning_days
+  }
+
   tags = merge(local.mysql_common_tags, {
     class = "deprecated"
   })
 }
 
 control "mysql_db_system_low_connection_count" {
-  title       = "MySQL DB systems with fewer than 2 connections per day should be reviewed"
+  title       = "MySQL DB systems with a low number connections per day should be reviewed"
   description = "These DB systems have very little usage in last 30 days and should be shutdown when not in use."
   severity    = "high"
 
@@ -67,7 +102,7 @@ control "mysql_db_system_low_connection_count" {
       case
         when u.avg_max is null then 'error'
         when u.avg_max = 0 then 'alarm'
-        when u.avg_max < 2 then 'info'
+        when u.avg_max < $1 then 'info'
         else 'ok'
       end as status,
       case
@@ -84,6 +119,11 @@ control "mysql_db_system_low_connection_count" {
     where
       m.lifecycle_state <> 'DELETED';
   EOT
+
+  param "mysql_db_system_avg_connections" {
+    description = "The minimum number of average connections per day required for DB systems to be considered in-use."
+    default     = var.mysql_db_system_avg_connections
+  }
 
   tags = merge(local.mysql_common_tags, {
     class = "unused"
@@ -129,6 +169,16 @@ control "mysql_db_system_low_usage" {
       left join oci_identity_compartment as c on c.id = i.compartment_id
     where i.lifecycle_state <> 'DELETED';
   EOT
+
+  param "mysql_db_system_avg_cpu_utilization_low" {
+    description = "The average CPU utilization required for DB systems to be considered infrequently used. This value should be lower than mysql_db_system_avg_cpu_utilization_high."
+    default     = var.mysql_db_system_avg_cpu_utilization_low
+  }
+
+  param "mysql_db_system_avg_cpu_utilization_high" {
+    description = "The average CPU utilization required for DB systems to be considered frequently used. This value should be higher than mysql_db_system_avg_cpu_utilization_low."
+    default     = var.mysql_db_system_avg_cpu_utilization_high
+  }
 
   tags = merge(local.mysql_common_tags, {
     class = "unused"
