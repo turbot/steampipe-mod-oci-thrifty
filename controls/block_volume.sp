@@ -1,13 +1,3 @@
-variable "boot_volume_avg_read_write_ops_low" {
-  type        = number
-  description = "The number of average read/write ops required for boot volumes to be considered infrequently used. This value should be lower than boot_volume_avg_read_write_ops_high."
-}
-
-variable "boot_volume_avg_read_write_ops_high" {
-  type        = number
-  description = "The number of average read/write ops required for boot volumes to be considered frequently used. This value should be higher than boot_volume_avg_read_write_ops_low."
-}
-
 variable "block_volume_backup_age_max_days" {
   type        = number
   description = "The maximum number of days volume backups can be retained."
@@ -16,6 +6,16 @@ variable "block_volume_backup_age_max_days" {
 variable "boot_and_block_volume_max_size_gb" {
   type        = number
   description = "The maximum size (GB) allowed for boot and block volumes."
+}
+
+variable "boot_volume_avg_read_write_ops_high" {
+  type        = number
+  description = "The number of average read/write ops required for boot volumes to be considered frequently used. This value should be higher than boot_volume_avg_read_write_ops_low."
+}
+
+variable "boot_volume_avg_read_write_ops_low" {
+  type        = number
+  description = "The number of average read/write ops required for boot volumes to be considered infrequently used. This value should be lower than boot_volume_avg_read_write_ops_high."
 }
 
 locals {

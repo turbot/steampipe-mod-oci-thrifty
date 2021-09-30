@@ -1,21 +1,21 @@
 variable "autonomous_database_age_max_days" {
   type        = number
-  description = "The maximum number of days an autonomous database is allowed to run."
+  description = "The maximum number of days autonomous databases are allowed to run."
 }
 
 variable "autonomous_database_age_warning_days" {
   type        = number
-  description = "The number of days after which an autonomous database set a warning."
-}
-
-variable "autonomous_database_avg_cpu_utilization_low" {
-  type        = number
-  description = "The average CPU utilization required for autonomous databases to be considered infrequently used. This value should be lower than autonomous_database_avg_cpu_utilization_high."
+  description = "The number of days autonomous databases can be running before sending a warning."
 }
 
 variable "autonomous_database_avg_cpu_utilization_high" {
   type        = number
   description = "The average CPU utilization required for autonomous databases to be considered frequently used. This value should be higher than autonomous_database_avg_cpu_utilization_low."
+}
+
+variable "autonomous_database_avg_cpu_utilization_low" {
+  type        = number
+  description = "The average CPU utilization required for autonomous databases to be considered infrequently used. This value should be lower than autonomous_database_avg_cpu_utilization_high."
 }
 
 locals {
@@ -59,12 +59,12 @@ control "database_autonomous_database_max_age" {
   EOT
 
   param "autonomous_database_age_max_days" {
-    description = "The maximum number of days an autonomous database is allowed to run."
+    description = "The maximum number of days autonomous databases are allowed to run."
     default     = var.autonomous_database_age_max_days
   }
 
   param "autonomous_database_age_warning_days" {
-    description = "The number of days after which an autonomous database set a warning."
+    description = "The number of days autonomous databases can be running before sending a warning."
     default     = var.autonomous_database_age_warning_days
   }
 

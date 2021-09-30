@@ -1,11 +1,11 @@
 variable "mysql_db_system_age_max_days" {
   type        = number
-  description = "The maximum number of days a MySQL DB system is allowed to run."
+  description = "The maximum number of days DB systems are allowed to run."
 }
 
 variable "mysql_db_system_age_warning_days" {
   type        = number
-  description = "The number of days after which a MySQL DB system set a warning."
+  description = "The number of days DB systems can be running before sending a warning."
 }
 
 variable "mysql_db_system_avg_connections" {
@@ -13,14 +13,14 @@ variable "mysql_db_system_avg_connections" {
   description = "The minimum number of average connections per day required for DB systems to be considered in-use."
 }
 
-variable "mysql_db_system_avg_cpu_utilization_low" {
-  type        = number
-  description = "The average CPU utilization required for DB systems to be considered infrequently used. This value should be lower than mysql_db_system_avg_cpu_utilization_high."
-}
-
 variable "mysql_db_system_avg_cpu_utilization_high" {
   type        = number
   description = "The average CPU utilization required for DB systems to be considered frequently used. This value should be higher than mysql_db_system_avg_cpu_utilization_low."
+}
+
+variable "mysql_db_system_avg_cpu_utilization_low" {
+  type        = number
+  description = "The average CPU utilization required for DB systems to be considered infrequently used. This value should be lower than mysql_db_system_avg_cpu_utilization_high."
 }
 
 locals {
@@ -65,12 +65,12 @@ control "mysql_db_system_age" {
   EOT
 
   param "mysql_db_system_age_max_days" {
-    description = "The maximum number of days a MySQL DB system is allowed to run."
+    description = "The maximum number of days DB systems are allowed to run."
     default     = var.mysql_db_system_age_max_days
   }
 
   param "mysql_db_system_age_warning_days" {
-    description = "The number of days after which a MySQL DB system set a warning."
+    description = "The number of days DB systems can be running before sending a warning."
     default     = var.mysql_db_system_age_warning_days
   }
 

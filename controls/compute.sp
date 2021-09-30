@@ -1,6 +1,6 @@
-variable "compute_running_instance_age_max_days" {
+variable "compute_instance_avg_cpu_utilization_high" {
   type        = number
-  description = "The maximum number of days an instance is allowed to run."
+  description = "The average CPU utilization required for instances to be considered frequently used. This value should be higher than compute_instance_avg_cpu_utilization_low."
 }
 
 variable "compute_instance_avg_cpu_utilization_low" {
@@ -8,9 +8,9 @@ variable "compute_instance_avg_cpu_utilization_low" {
   description = "The average CPU utilization required for instances to be considered infrequently used. This value should be lower than compute_instance_avg_cpu_utilization_high."
 }
 
-variable "compute_instance_avg_cpu_utilization_high" {
+variable "compute_running_instance_age_max_days" {
   type        = number
-  description = "The average CPU utilization required for instances to be considered frequently used. This value should be higher than compute_instance_avg_cpu_utilization_low."
+  description = "The maximum number of days instances are allowed to run."
 }
 
 locals {
@@ -56,7 +56,7 @@ control "compute_instance_long_running" {
   EOT
 
   param "compute_running_instance_age_max_days" {
-    description = "The maximum number of days an instance is allowed to run."
+    description = "The maximum number of days instances are allowed to run."
     default     = var.compute_running_instance_age_max_days
   }
 

@@ -50,7 +50,7 @@ steampipe check control.compute_instance_long_running
 
 This mod uses the credentials configured in the [Steampipe OCI plugin](https://hub.steampipe.io/plugins/turbot/oci).
 
-## Configuration
+### Configuration
 
 Several benchmarks have [input variables](https://steampipe.io/docs/using-steampipe/mod-variables) that can be configured to better match your environment and requirements. Each variable has a default defined in `steampipe.spvars`, but these can be overwritten in several ways:
 
