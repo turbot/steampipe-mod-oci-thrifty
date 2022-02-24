@@ -12,4 +12,10 @@ mod "oci_thrifty" {
     description = "Are you a Thrifty Oracle Cloud dev? This Steampipe mod checks your OCI account(s) for unused and under-utilized resources."
     image       = "/images/mods/turbot/oci-thrifty-social-graphic.png"
   }
+
+  requires {
+    plugin "oci" {
+      version = "0.8.1"
+    }
+  }
 }
