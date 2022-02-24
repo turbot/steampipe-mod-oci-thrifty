@@ -1,3 +1,9 @@
+## v0.4 [2022-02-24]
+
+_Enhancements_
+
+- Updated the inline query of `database_autonomous_database_low_utilization` control to use the new `oci_database_autonomous_db_metric_cpu_utilization_daily` table instead of old `oci_database_autonomous_database_metric_cpu_utilization_daily` table ([#19](https://github.com/turbot/steampipe-mod-oci-thrifty/pull/19))
+
 ## v0.3 [2021-09-30]
 
 _What's new?_
