@@ -85,7 +85,7 @@ control "database_autonomous_database_low_utilization" {
         round(cast(sum(maximum)/count(maximum) as numeric), 1) as avg_max,
         count(maximum) as days
       from
-        oci_database_autonomous_database_metric_cpu_utilization_daily
+        oci_database_autonomous_db_metric_cpu_utilization_daily
       where
         date_part('day', now() - timestamp) <= 30
       group by id
