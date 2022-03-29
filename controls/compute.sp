@@ -1,16 +1,19 @@
 variable "compute_instance_avg_cpu_utilization_high" {
   type        = number
   description = "The average CPU utilization required for instances to be considered frequently used. This value should be higher than compute_instance_avg_cpu_utilization_low."
+  default     = 35
 }
 
 variable "compute_instance_avg_cpu_utilization_low" {
   type        = number
   description = "The average CPU utilization required for instances to be considered infrequently used. This value should be lower than compute_instance_avg_cpu_utilization_high."
+  default     = 20
 }
 
 variable "compute_running_instance_age_max_days" {
   type        = number
   description = "The maximum number of days instances are allowed to run."
+  default     = 90
 }
 
 locals {
