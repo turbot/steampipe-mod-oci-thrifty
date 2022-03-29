@@ -1,21 +1,25 @@
 variable "autonomous_database_age_max_days" {
   type        = number
   description = "The maximum number of days autonomous databases are allowed to run."
+  default     = 90
 }
 
 variable "autonomous_database_age_warning_days" {
   type        = number
   description = "The number of days autonomous databases can be running before sending a warning."
+  default     = 30
 }
 
 variable "autonomous_database_avg_cpu_utilization_high" {
   type        = number
   description = "The average CPU utilization required for autonomous databases to be considered frequently used. This value should be higher than autonomous_database_avg_cpu_utilization_low."
+  default     = 35
 }
 
 variable "autonomous_database_avg_cpu_utilization_low" {
   type        = number
   description = "The average CPU utilization required for autonomous databases to be considered infrequently used. This value should be lower than autonomous_database_avg_cpu_utilization_high."
+  default     = 25
 }
 
 locals {

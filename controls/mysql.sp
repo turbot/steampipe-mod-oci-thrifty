@@ -1,26 +1,31 @@
 variable "mysql_db_system_age_max_days" {
   type        = number
   description = "The maximum number of days DB systems are allowed to run."
+  default     = 90
 }
 
 variable "mysql_db_system_age_warning_days" {
   type        = number
   description = "The number of days DB systems can be running before sending a warning."
+  default     = 30
 }
 
 variable "mysql_db_system_avg_connections" {
   type        = number
   description = "The minimum number of average connections per day required for DB systems to be considered in-use."
+  default     = 2
 }
 
 variable "mysql_db_system_avg_cpu_utilization_high" {
   type        = number
   description = "The average CPU utilization required for DB systems to be considered frequently used. This value should be higher than mysql_db_system_avg_cpu_utilization_low."
+  default     = 50
 }
 
 variable "mysql_db_system_avg_cpu_utilization_low" {
   type        = number
   description = "The average CPU utilization required for DB systems to be considered infrequently used. This value should be lower than mysql_db_system_avg_cpu_utilization_high."
+  default     = 25
 }
 
 locals {
