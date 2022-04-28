@@ -29,8 +29,8 @@ variable "mysql_db_system_avg_cpu_utilization_low" {
 }
 
 locals {
-  mysql_common_tags = merge(local.thrifty_common_tags, {
-    service = "mysql"
+  mysql_common_tags = merge(local.oci_thrifty_common_tags, {
+    service = "OCI/MySQL"
   })
 }
 
@@ -38,12 +38,15 @@ benchmark "mysql" {
   title         = "MySQL Checks"
   description   = "Thrifty developers checks old MySQL DB systems which were created over 90 days ago."
   documentation = file("./controls/docs/mysql.md")
-  tags          = local.mysql_common_tags
   children = [
     control.mysql_db_system_age,
     control.mysql_db_system_low_connection_count,
     control.mysql_db_system_low_usage
   ]
+
+  tags = merge(local.mysql_common_tags, {
+    type = "Benchmark"
+  })
 }
 
 control "mysql_db_system_age" {

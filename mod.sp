@@ -1,3 +1,13 @@
+// Benchmarks and controls for specific services should override the "service" tag
+
+locals {
+  oci_thrifty_common_tags = {
+    category = "Cost"
+    plugin   = "oci"
+    service  = "OCI"
+  }
+}
+
 mod "oci_thrifty" {
   # hub metadata
   title         = "Oracle Cloud Infrastructure Thrifty"
