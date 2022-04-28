@@ -1,6 +1,6 @@
 locals {
-  network_common_tags = merge(local.thrifty_common_tags, {
-    service = "network"
+  network_common_tags = merge(local.oci_thrifty_common_tags, {
+    service = "OCI/Network"
   })
 }
 
@@ -8,10 +8,13 @@ benchmark "network" {
   title         = "Network Checks"
   description   = "Thrifty developers eliminate unused and under-utilized network resources."
   documentation = file("./controls/docs/compute.md")
-  tags          = local.network_common_tags
   children = [
     control.network_public_ip_unattached
   ]
+
+  tags = merge(local.network_common_tags, {
+    type = "Benchmark"
+  })
 }
 
 control "network_public_ip_unattached" {

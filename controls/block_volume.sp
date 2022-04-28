@@ -1,6 +1,6 @@
 locals {
-  block_volume_common_tags = merge(local.thrifty_common_tags, {
-    service = "block_volume"
+  block_volume_common_tags = merge(local.oci_thrifty_common_tags, {
+    service = "OCI/BlockVolume"
   })
 }
 
@@ -8,7 +8,6 @@ benchmark "block_volume" {
   title         = "Block Volume Checks"
   description   = "Thrifty developers eliminate unused and under-utilized block & boot volume resources."
   documentation = file("./controls/docs/compute.md")
-  tags          = local.block_volume_common_tags
   children = [
     control.boot_and_block_volume_attached_stopped_instance,
     control.boot_volume_low_usage,
@@ -17,6 +16,10 @@ benchmark "block_volume" {
     control.boot_and_block_volume_large,
     control.boot_and_block_volume_unattached,
   ]
+
+  tags = merge(local.block_volume_common_tags, {
+    type = "Benchmark"
+  })
 }
 
 control "boot_and_block_volume_attached_stopped_instance" {

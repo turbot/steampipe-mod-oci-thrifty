@@ -1,6 +1,6 @@
 locals {
-  compute_common_tags = merge(local.thrifty_common_tags, {
-    service = "compute"
+  compute_common_tags = merge(local.oci_thrifty_common_tags, {
+    service = "OCI/Compute"
   })
 }
 
@@ -8,11 +8,14 @@ benchmark "compute" {
   title         = "Compute Checks"
   description   = "Thrifty developers eliminate unused and under-utilized compute resources."
   documentation = file("./controls/docs/compute.md")
-  tags          = local.compute_common_tags
   children = [
     control.compute_instance_long_running,
     control.compute_instance_low_utilization
   ]
+
+  tags = merge(local.compute_common_tags, {
+    type = "Benchmark"
+  })
 }
 
 control "compute_instance_long_running" {

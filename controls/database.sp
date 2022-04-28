@@ -1,6 +1,6 @@
 locals {
-  database_common_tags = merge(local.thrifty_common_tags, {
-    service = "database"
+  database_common_tags = merge(local.oci_thrifty_common_tags, {
+    service = "OCI/Database"
   })
 }
 
@@ -8,11 +8,14 @@ benchmark "database" {
   title         = "Database Checks"
   description   = "Thrifty developers checks old autonomous database which were created over 90 days ago."
   documentation = file("./controls/docs/database.md")
-  tags          = local.database_common_tags
   children = [
     control.database_autonomous_database_age_90,
     control.database_autonomous_database_low_utilization
   ]
+
+  tags = merge(local.database_common_tags, {
+    type = "Benchmark"
+  })
 }
 
 control "database_autonomous_database_age_90" {
