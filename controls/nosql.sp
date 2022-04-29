@@ -5,8 +5,8 @@ variable "nosql_table_stale_data_max_days" {
 }
 
 locals {
-  nosql_common_tags = merge(local.thrifty_common_tags, {
-    service = "nosql"
+  nosql_common_tags = merge(local.oci_thrifty_common_tags, {
+    service = "OCI/NoSQL"
   })
 }
 
@@ -14,10 +14,13 @@ benchmark "nosql" {
   title         = "NoSQL Checks"
   description   = "Thrifty developers review NoSQL tables with stale data."
   documentation = file("./controls/docs/nosql.md")
-  tags          = local.nosql_common_tags
   children = [
     control.nosql_table_stale_data
   ]
+
+  tags = merge(local.nosql_common_tags, {
+    type = "Benchmark"
+  })
 }
 
 control "nosql_table_stale_data" {
