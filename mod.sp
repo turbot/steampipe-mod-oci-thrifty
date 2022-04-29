@@ -1,5 +1,4 @@
 // Benchmarks and controls for specific services should override the "service" tag
-
 locals {
   oci_thrifty_common_tags = {
     category = "Cost"

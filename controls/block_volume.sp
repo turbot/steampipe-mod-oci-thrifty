@@ -24,7 +24,7 @@ variable "boot_volume_avg_read_write_ops_low" {
 
 locals {
   block_volume_common_tags = merge(local.oci_thrifty_common_tags, {
-    service = "OCI/BlockVolume"
+    service = "OCI/BlockStorage"
   })
 }
 

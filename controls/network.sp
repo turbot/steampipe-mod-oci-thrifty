@@ -1,6 +1,6 @@
 locals {
   network_common_tags = merge(local.oci_thrifty_common_tags, {
-    service = "OCI/Network"
+    service = "OCI/VCN"
   })
 }
 
