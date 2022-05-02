@@ -1,6 +1,6 @@
 locals {
-  budget_common_tags = merge(local.thrifty_common_tags, {
-    service = "budget"
+  budget_common_tags = merge(local.oci_thrifty_common_tags, {
+    service = "OCI/Budget"
   })
 }
 
@@ -8,10 +8,13 @@ benchmark "budget" {
   title         = "Budget Checks"
   description   = "Thrifty developers check that a budget alert rule is set for each compartments, including the root compartment."
   documentation = file("./controls/docs/budget.md")
-  tags          = local.budget_common_tags
   children = [
     control.budget_alert_count
   ]
+
+  tags = merge(local.budget_common_tags, {
+    type = "Benchmark"
+  })
 }
 
 control "budget_alert_count" {

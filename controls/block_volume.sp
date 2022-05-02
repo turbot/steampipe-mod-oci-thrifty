@@ -23,8 +23,8 @@ variable "boot_volume_avg_read_write_ops_low" {
 }
 
 locals {
-  block_volume_common_tags = merge(local.thrifty_common_tags, {
-    service = "block_volume"
+  block_volume_common_tags = merge(local.oci_thrifty_common_tags, {
+    service = "OCI/BlockStorage"
   })
 }
 
@@ -32,7 +32,6 @@ benchmark "block_volume" {
   title         = "Block Volume Checks"
   description   = "Thrifty developers eliminate unused and under-utilized block & boot volume resources."
   documentation = file("./controls/docs/compute.md")
-  tags          = local.block_volume_common_tags
   children = [
     control.block_volume_auto_tune_performance_enabled,
     control.block_volume_backup_max_age,
@@ -41,6 +40,10 @@ benchmark "block_volume" {
     control.boot_and_block_volume_unattached,
     control.boot_volume_low_usage
   ]
+
+  tags = merge(local.block_volume_common_tags, {
+    type = "Benchmark"
+  })
 }
 
 control "boot_and_block_volume_attached_stopped_instance" {

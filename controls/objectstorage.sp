@@ -1,6 +1,6 @@
 locals {
-  objectstorage_common_tags = merge(local.thrifty_common_tags, {
-    service = "objectstorage"
+  objectstorage_common_tags = merge(local.oci_thrifty_common_tags, {
+    service = "OCI/ObjectStorage"
   })
 }
 
@@ -8,10 +8,13 @@ benchmark "objectstorage" {
   title         = "Object Storage Checks"
   description   = "Thrifty developers ensure their Object Storage buckets have managed lifecycle policies."
   documentation = file("./controls/docs/objectstorage.md")
-  tags          = local.objectstorage_common_tags
   children = [
     control.objectstorage_bucket_without_lifecycle_policy
   ]
+
+  tags = merge(local.objectstorage_common_tags, {
+    type = "Benchmark"
+  })
 }
 
 control "objectstorage_bucket_without_lifecycle_policy" {
