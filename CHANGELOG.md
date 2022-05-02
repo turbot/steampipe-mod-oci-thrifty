@@ -1,3 +1,9 @@
+## v0.6 [2022-05-02]
+
+_Enhancements_
+
+- Added `category`, `service`, and `type` tags to benchmarks and controls. ([#28](https://github.com/turbot/steampipe-mod-oci-thrifty/pull/28))
+
 ## v0.5 [2022-03-29]
 
 _What's new?_
