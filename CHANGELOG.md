@@ -1,3 +1,9 @@
+## v0.7 [2022-05-09]
+
+_Enhancements_
+
+- Updated docs/index.md and README with new dashboard screenshots and latest format. ([#33](https://github.com/turbot/steampipe-mod-oci-thrifty/pull/33))
+
 ## v0.6 [2022-05-02]
 
 _Enhancements_
