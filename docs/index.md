@@ -31,7 +31,7 @@ Download and install Steampipe (https://steampipe.io/downloads). Or use Brew:
 ```sh
 brew tap turbot/tap
 brew install steampipe
-``
+```
 
 Install the OCI plugin with [Steampipe](https://steampipe.io):
 
@@ -45,6 +45,7 @@ Clone:
 git clone https://github.com/turbot/steampipe-mod-oci-thrifty.git
 cd steampipe-mod-oci-thrifty
 ```
+
 ### Usage
 
 Start your dashboard server to get started:
