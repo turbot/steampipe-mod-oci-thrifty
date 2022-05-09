@@ -4,7 +4,7 @@ An Oracle Cloud cost savings and waste checking tool.
 
 Run checks in a dashboard:
 
-![image](https://raw.githubusercontent.com/turbot/steampipe-mod-oci-thrifty/add-benchmark-screenshots/docs/oci_thrifty_dashboard.png)
+![image](https://raw.githubusercontent.com/turbot/steampipe-mod-oci-thrifty/main/docs/oci_thrifty_dashboard.png)
 
 Includes checks for:
 
