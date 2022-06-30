@@ -1,4 +1,4 @@
-# Oracle Cloud Thrifty
+# Oracle Cloud Thrifty Mod for Steampipe
 
 An Oracle Cloud cost savings and waste checking tool.
 
