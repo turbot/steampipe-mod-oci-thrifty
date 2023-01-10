@@ -160,8 +160,8 @@ control "mysql_db_system_low_usage" {
       display_name as resource,
       case
         when avg_max is null then 'error'
-        when avg_max <= $1 then 'alarm'
-        when avg_max <= $2 then 'info'
+        when avg_max <= 25 then 'alarm'
+        when avg_max <= 50 then 'info'
         else 'ok'
       end as status,
       case
