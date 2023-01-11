@@ -1,3 +1,9 @@
+## v0.8 [2023-01-11]
+
+_Bug fixes_
+
+- Fixed the missing query params in `mysql_db_system_low_usage` control. ([#39](https://github.com/turbot/steampipe-mod-oci-thrifty/pull/39)) (Thanks [@marakomer](https://github.com/marakomer) for the contribution!)
+
 ## v0.7 [2022-05-09]
 
 _Enhancements_
