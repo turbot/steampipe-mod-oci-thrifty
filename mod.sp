@@ -31,11 +31,6 @@ locals {
   %{~ if contains(var.common_dimensions, "tenant_id") }, __QUALIFIER__tenant_id%{ endif ~}
   EOQ
 
-
-  // tag_dimensions_sql = <<-EOQ
-  // %{~ for dim in var.tag_dimensions }, tags ->> '${dim}' as "${replace(dim, "\"", "\"\"")}"%{ endfor ~}
-  // EOQ
-
   tag_dimensions_qualifier_sql = <<-EOQ
   %{~ for dim in var.tag_dimensions },  __QUALIFIER__tags ->> '${dim}' as "${replace(dim, "\"", "\"\"")}"%{ endfor ~} 
   EOQ
