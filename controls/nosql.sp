@@ -36,8 +36,9 @@ control "nosql_table_stale_data" {
         else 'ok'
       end as status,
       a.title || ' was changed ' || date_part('day', now()-(time_updated::timestamptz)) || ' day(s) ago.' as reason,
-      a.region,
       coalesce(c.name, 'root') as compartment
+      ${replace(local.tag_dimensions_qualifier_sql, "__QUALIFIER__", "a.")}
+      ${replace(local.common_dimensions_qualifier_sql, "__QUALIFIER__", "a.")}
     from
       oci_nosql_table as a
       left join oci_identity_compartment as c on c.id = a.compartment_id;

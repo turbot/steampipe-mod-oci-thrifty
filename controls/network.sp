@@ -32,6 +32,7 @@ control "network_public_ip_unattached" {
       a.display_name || ' in ' || a.lifecycle_state || ' state.' as reason,
       a.scope,
       coalesce(c.name, 'root') as compartment
+      ${replace(local.tag_dimensions_qualifier_sql, "__QUALIFIER__", "a.")}
     from
       oci_core_public_ip as a
       left join oci_identity_compartment as c on c.id = a.compartment_id;

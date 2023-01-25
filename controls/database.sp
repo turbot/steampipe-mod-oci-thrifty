@@ -56,8 +56,9 @@ control "database_autonomous_database_max_age" {
         else 'ok'
       end as status,
       a.title || ' of type ' || a.db_workload || ' has been in use for ' || date_part('day', now()-a.time_created) || ' days.' as reason,
-      a.region,
       coalesce(c.name, 'root') as compartment
+      ${replace(local.tag_dimensions_qualifier_sql, "__QUALIFIER__", "a.")}
+      ${replace(local.common_dimensions_qualifier_sql, "__QUALIFIER__", "a.")}
     from
       oci_database_autonomous_database as a
       left join oci_identity_compartment as c on c.id = a.compartment_id
@@ -109,8 +110,9 @@ control "database_autonomous_database_low_utilization" {
         when avg_max is null then 'Monitoring metrics not available for ' || i.title || '.'
         else i.title || ' averaging ' || avg_max || '% max utilization over the last ' || days || ' day(s).'
       end as reason,
-      i.region,
       coalesce(c.name, 'root') as compartment
+      ${replace(local.tag_dimensions_qualifier_sql, "__QUALIFIER__", "i.")}
+      ${replace(local.common_dimensions_qualifier_sql, "__QUALIFIER__", "i.")}
     from
       oci_database_autonomous_database as i
       left join database_autonomous_database_utilization as u on u.id = i.id

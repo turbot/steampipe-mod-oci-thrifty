@@ -35,8 +35,9 @@ control "objectstorage_bucket_without_lifecycle_policy" {
         when object_lifecycle_policy -> 'items' @> '[{"isEnabled": true}]' then a.title || ' has lifecycle policy.'
         else a.title || ' has disabled lifecycle policy.'
       end as reason,
-      a.region,
       coalesce(c.name, 'root') as compartment
+      ${replace(local.tag_dimensions_qualifier_sql, "__QUALIFIER__", "a.")}
+      ${replace(local.common_dimensions_qualifier_sql, "__QUALIFIER__", "a.")}
     from
       oci_objectstorage_bucket as a
       left join oci_identity_compartment as c on c.id = a.compartment_id;

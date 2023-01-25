@@ -63,8 +63,9 @@ control "mysql_db_system_age" {
         else 'ok'
       end as status,
       a.title || ' has been in use for ' || date_part('day', now()-a.time_created) || ' days.' as reason,
-      a.region,
       coalesce(c.name, 'root') as compartment
+      ${replace(local.tag_dimensions_qualifier_sql, "__QUALIFIER__", "a.")}
+      ${replace(local.common_dimensions_qualifier_sql, "__QUALIFIER__", "a.")}
     from
       oci_mysql_db_system as a
       left join oci_identity_compartment as c on c.id = a.compartment_id
@@ -118,8 +119,9 @@ control "mysql_db_system_low_connection_count" {
         when u.avg_max = 0 then m.title || ' has not been connected to in the last ' || days || ' day(s).'
         else m.title || ' is averaging ' || u.avg_max || ' max connections/day in the last ' || days || ' day(s).'
       end as reason,
-      m.region,
       coalesce(c.name, 'root') as compartment
+      ${replace(local.tag_dimensions_qualifier_sql, "__QUALIFIER__", "m.")}
+      ${replace(local.common_dimensions_qualifier_sql, "__QUALIFIER__", "m.")}
     from
       oci_mysql_db_system as m
       left join mysql_db_usage as u on u.id = m.id
@@ -168,9 +170,9 @@ control "mysql_db_system_low_usage" {
         when avg_max is null then 'Monitoring metrics not available for ' || i.title || '.'
         else i.title || ' is averaging ' || avg_max || '% max utilization over the last ' || days || ' days.'
       end as reason,
-      i.region,
       coalesce(c.name, 'root') as compartment
-
+      ${replace(local.tag_dimensions_qualifier_sql, "__QUALIFIER__", "i.")}
+      ${replace(local.common_dimensions_qualifier_sql, "__QUALIFIER__", "i.")}
     from
       oci_mysql_db_system i
       left join mysql_db_usage as u on u.id = i.id

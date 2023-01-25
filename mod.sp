@@ -7,6 +7,47 @@ locals {
   }
 }
 
+variable "common_dimensions" {
+  type        = list(string)
+  description = "A list of common dimensions to add to each control."
+  # Define which common dimensions should be added to each control.
+  # - tenant_id
+  # - connection_name (_ctx ->> 'connection_name')
+  # - region
+  default     = [ "tenant_id", "connection_name", "region" ]
+}
+
+variable "tag_dimensions" {
+  type        = list(string)
+  description = "A list of tags to add as dimensions to each control."
+  default     = [ "Owner" ]
+}
+
+locals {
+
+  common_dimensions_qualifier_sql = <<-EOQ
+  %{~ if contains(var.common_dimensions, "connection_name") }, __QUALIFIER___ctx ->> 'connection_name'%{ endif ~}
+  %{~ if contains(var.common_dimensions, "region") }, __QUALIFIER__region%{ endif ~}
+  %{~ if contains(var.common_dimensions, "tenant_id") }, __QUALIFIER__tenant_id%{ endif ~}
+  EOQ
+
+
+  // tag_dimensions_sql = <<-EOQ
+  // %{~ for dim in var.tag_dimensions }, tags ->> '${dim}' as "${replace(dim, "\"", "\"\"")}"%{ endfor ~}
+  // EOQ
+
+  tag_dimensions_qualifier_sql = <<-EOQ
+  %{~ for dim in var.tag_dimensions },  __QUALIFIER__tags ->> '${dim}' as "${replace(dim, "\"", "\"\"")}"%{ endfor ~} 
+  EOQ
+
+}
+
+locals {
+
+  common_dimensions_sql = replace(local.common_dimensions_qualifier_sql, "__QUALIFIER__", "")
+  tag_dimensions_sql = replace(local.tag_dimensions_qualifier_sql, "__QUALIFIER__", "")
+}
+
 mod "oci_thrifty" {
   # hub metadata
   title         = "Oracle Cloud Infrastructure Thrifty"
