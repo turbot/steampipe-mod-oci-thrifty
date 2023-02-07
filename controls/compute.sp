@@ -42,7 +42,7 @@ control "compute_instance_long_running" {
   description = "Instances should ideally be ephemeral and rehydrated frequently, check why these instances have been running for so long."
   severity    = "low"
 
-  sql = <<-EOT
+  sql = <<-EOQ
     select
       a.id as resource,
       case
@@ -60,7 +60,7 @@ control "compute_instance_long_running" {
     from
       oci_core_instance as a
       left join oci_identity_compartment as c on c.id = a.compartment_id;
-  EOT
+  EOQ
 
   param "compute_running_instance_age_max_days" {
     description = "The maximum number of days instances are allowed to run."
@@ -77,7 +77,7 @@ control "compute_instance_low_utilization" {
   description = "Resize or eliminate under utilized instances."
   severity    = "low"
 
-  sql = <<-EOT
+  sql = <<-EOQ
     with core_instance_utilization as (
       select
         id,
@@ -109,7 +109,7 @@ control "compute_instance_low_utilization" {
       oci_core_instance as i
       left join core_instance_utilization as u on u.id = i.id
       left join oci_identity_compartment as c on c.id = i.compartment_id;
-  EOT
+  EOQ
 
   param "compute_instance_avg_cpu_utilization_low" {
     description = "The average CPU utilization required for instances to be considered infrequently used. This value should be lower than compute_instance_avg_cpu_utilization_high."
@@ -131,7 +131,7 @@ control "compute_instance_monitoring_enabled" {
   description = "The compute instance metrics provide data about the activity level and throughput of the instance. These metrics are required to use features such as autoscaling, metrics, alarms, and notifications with compute instances."
   severity    = "low"
 
-  sql = <<-EOT
+  sql = <<-EOQ
       with instance_monitoring as (
       select
         distinct display_name,
@@ -162,7 +162,7 @@ control "compute_instance_monitoring_enabled" {
       left join oci_identity_compartment as c on c.id = v.compartment_id
     where
       v.lifecycle_state <> 'TERMINATED';
-  EOT
+  EOQ
 
   tags = merge(local.compute_common_tags, {
     class = "managed"

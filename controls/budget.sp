@@ -22,7 +22,7 @@ control "budget_alert_count" {
   description = "Budget alerts should be set for each compartment, including the root compartment, to monitor costs."
   severity    = "low"
 
-  sql = <<-EOT
+  sql = <<-EOQ
     with compartment_with_budget as (
       select
         id,
@@ -55,7 +55,7 @@ control "budget_alert_count" {
       left join oci_budget_budget as a on a.targets ?& array[c.id]
     where
       c.lifecycle_state = 'ACTIVE';
-  EOT
+  EOQ
 
   tags = merge(local.budget_common_tags, {
     class = "managed"

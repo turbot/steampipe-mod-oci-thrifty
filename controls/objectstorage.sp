@@ -22,7 +22,7 @@ control "objectstorage_bucket_without_lifecycle_policy" {
   description = "Object Storage buckets should have a lifecycle policy associated for data retention."
   severity    = "low"
 
-  sql = <<-EOT
+  sql = <<-EOQ
     select
       a.id as resource,
       case
@@ -41,7 +41,7 @@ control "objectstorage_bucket_without_lifecycle_policy" {
     from
       oci_objectstorage_bucket as a
       left join oci_identity_compartment as c on c.id = a.compartment_id;
-  EOT
+  EOQ
 
   tags = merge(local.objectstorage_common_tags, {
     class = "managed"

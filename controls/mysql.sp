@@ -54,7 +54,7 @@ control "mysql_db_system_age" {
   description = "Old MySQL DB systems should be reviewed and deleted if not required."
   severity    = "low"
 
-  sql = <<-EOT
+  sql = <<-EOQ
     select
       a.id as resource,
       case
@@ -71,7 +71,7 @@ control "mysql_db_system_age" {
       left join oci_identity_compartment as c on c.id = a.compartment_id
     where
       a.lifecycle_state <> 'DELETED';
-  EOT
+  EOQ
 
   param "mysql_db_system_age_max_days" {
     description = "The maximum number of days DB systems are allowed to run."
@@ -93,7 +93,7 @@ control "mysql_db_system_low_connection_count" {
   description = "These DB systems have very little usage in last 30 days and should be shutdown when not in use."
   severity    = "high"
 
-  sql = <<-EOT
+  sql = <<-EOQ
     with mysql_db_usage as (
       select
         id,
@@ -128,7 +128,7 @@ control "mysql_db_system_low_connection_count" {
       left join oci_identity_compartment as c on c.id = m.compartment_id
     where
       m.lifecycle_state <> 'DELETED';
-  EOT
+  EOQ
 
   param "mysql_db_system_avg_connections" {
     description = "The minimum number of average connections per day required for DB systems to be considered in-use."
@@ -145,7 +145,7 @@ control "mysql_db_system_low_usage" {
   description = "These DB systems have very little usage in last 30 days and should be shutdown when not in use."
   severity    = "high"
 
-  sql = <<-EOT
+  sql = <<-EOQ
     with mysql_db_usage as (
       select
         id,
@@ -178,7 +178,7 @@ control "mysql_db_system_low_usage" {
       left join mysql_db_usage as u on u.id = i.id
       left join oci_identity_compartment as c on c.id = i.compartment_id
     where i.lifecycle_state <> 'DELETED';
-  EOT
+  EOQ
 
   param "mysql_db_system_avg_cpu_utilization_low" {
     description = "The average CPU utilization required for DB systems to be considered infrequently used. This value should be lower than mysql_db_system_avg_cpu_utilization_high."

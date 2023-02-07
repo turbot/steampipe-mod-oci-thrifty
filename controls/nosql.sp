@@ -28,7 +28,7 @@ control "nosql_table_stale_data" {
   description = "If the data has not changed recently and has become stale, the table should be reviewed."
   severity    = "low"
 
-  sql = <<-EOT
+  sql = <<-EOQ
     select
       a.id as resource,
       case
@@ -42,7 +42,7 @@ control "nosql_table_stale_data" {
     from
       oci_nosql_table as a
       left join oci_identity_compartment as c on c.id = a.compartment_id;
-  EOT
+  EOQ
 
   param "nosql_table_stale_data_max_days" {
     description = "The maximum number of days table data can be unchanged before it is considered stale."
