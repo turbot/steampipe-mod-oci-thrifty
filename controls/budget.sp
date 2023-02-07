@@ -28,8 +28,7 @@ control "budget_alert_count" {
         id,
         'root' as name,
         'ACTIVE' as lifecycle_state,
-        tenant_id,
-        _ctx
+        tenant_id
       from
         oci_identity_tenancy
       union
@@ -37,8 +36,7 @@ control "budget_alert_count" {
         id,
         name,
         lifecycle_state,
-        tenant_id,
-        _ctx
+        tenant_id
       from
         oci_identity_compartment
     )
@@ -54,8 +52,7 @@ control "budget_alert_count" {
         else a.display_name || ' has scheduled budget with ' || a.reset_period || ' reset period.'
       end as reason,
       coalesce(c.name, 'root') as compartment,
-      c.tenant_id as tenant_id,
-      c._ctx -> 'connection_name' as connection_name 
+      c.tenant_id as tenant_id
     from
       compartment_with_budget as c
       left join oci_budget_budget as a on a.targets ?& array[c.id]

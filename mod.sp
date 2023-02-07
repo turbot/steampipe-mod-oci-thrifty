@@ -14,7 +14,7 @@ variable "common_dimensions" {
   # - connection_name (_ctx ->> 'connection_name')
   # - region
   # - tenant_id
-  default     = [ "connection_name", "region", "tenant_id" ]
+  default     = [ "region", "tenant_id" ]
 }
 
 variable "tag_dimensions" {
