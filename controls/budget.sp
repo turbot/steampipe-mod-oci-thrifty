@@ -22,19 +22,23 @@ control "budget_alert_count" {
   description = "Budget alerts should be set for each compartment, including the root compartment, to monitor costs."
   severity    = "low"
 
-  sql = <<-EOT
+  sql = <<-EOQ
     with compartment_with_budget as (
       select
         id,
         'root' as name,
-        'ACTIVE' as lifecycle_state
+        'ACTIVE' as lifecycle_state,
+        tenant_id,
+        _ctx
       from
         oci_identity_tenancy
       union
       select
         id,
         name,
-        lifecycle_state
+        lifecycle_state,
+        tenant_id,
+        _ctx
       from
         oci_identity_compartment
     )
@@ -50,12 +54,13 @@ control "budget_alert_count" {
         else a.display_name || ' has scheduled budget with ' || a.reset_period || ' reset period.'
       end as reason,
       coalesce(c.name, 'root') as compartment
+      ${replace(local.common_dimensions_qualifier_global_sql, "__QUALIFIER__", "c.")}
     from
       compartment_with_budget as c
       left join oci_budget_budget as a on a.targets ?& array[c.id]
     where
       c.lifecycle_state = 'ACTIVE';
-  EOT
+  EOQ
 
   tags = merge(local.budget_common_tags, {
     class = "managed"
