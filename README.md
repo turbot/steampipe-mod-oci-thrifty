@@ -112,7 +112,7 @@ The benchmark queries use common properties (like `connection_name`, `region` an
   ```
 
   ```shell
-  steampipe check benchmark.block_volume --var 'tag_dimensions=["Environment", "Department"]'
+  steampipe check benchmark.block_volume --var 'tag_dimensions=[ "Department", "Environment"]'
   ```
 
 - Set an environment variable:
@@ -122,7 +122,7 @@ The benchmark queries use common properties (like `connection_name`, `region` an
   ```
 
   ```shell
-  SP_VAR_tag_dimensions='["Environment", "Department"]' steampipe check control.boot_and_block_volume_large
+  SP_VAR_tag_dimensions='[ "Department", "Environment"]' steampipe check control.boot_and_block_volume_large
   ```
   
 ## Contributing

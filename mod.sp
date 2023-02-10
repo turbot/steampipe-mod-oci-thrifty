@@ -21,7 +21,7 @@ variable "tag_dimensions" {
   type        = list(string)
   description = "A list of tags to add as dimensions to each control."
   # A list of tag names to include as dimensions for resources that support
-  # tags (e.g. "Environment", "Department"). Default to empty since tag names are
+  # tags (e.g.  "Department", "Environment"). Default to empty since tag names are
   # a personal choice.
   default     = []
 }
