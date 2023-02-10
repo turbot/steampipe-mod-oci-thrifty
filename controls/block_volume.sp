@@ -51,7 +51,7 @@ control "boot_and_block_volume_attached_stopped_instance" {
   description = "Instances that are stopped may no longer need any volumes attached."
   severity    = "low"
 
-  sql = <<-EOT
+  sql = <<-EOQ
     -- Listing core boot volumes and block volumes associated with running instances
     with vols_with_instances as (
       select
@@ -75,6 +75,8 @@ control "boot_and_block_volume_attached_stopped_instance" {
       select
         id,
         compartment_id,
+        _ctx,
+        tenant_id,
         region,
         display_name
       from
@@ -83,6 +85,8 @@ control "boot_and_block_volume_attached_stopped_instance" {
       select
         id,
         compartment_id,
+        _ctx,
+        tenant_id,
         region,
         display_name
       from
@@ -99,13 +103,14 @@ control "boot_and_block_volume_attached_stopped_instance" {
         when v.volume_id is null then a.display_name || ' not associated with running instance.'
         else a.display_name || ' associated with running instance.'
       end as reason,
-      a.region,
       coalesce(c.name, 'root') as compartment
+      ${local.tag_dimensions_sql}
+      ${replace(local.common_dimensions_qualifier_sql, "__QUALIFIER__", "a.")}
     from
       all_volumes as a
       left join vols_with_instances as v on v.volume_id = a.id
       left join oci_identity_compartment as c on c.id = a.compartment_id;
-  EOT
+  EOQ
 
   tags = merge(local.block_volume_common_tags, {
     class = "unused"
@@ -117,7 +122,7 @@ control "boot_volume_low_usage" {
   description = "Boot volumes that are unused should be archived and deleted."
   severity    = "low"
 
-  sql = <<-EOT
+  sql = <<-EOQ
     with boot_volume_usage as (
       select
         compartment_id,
@@ -153,13 +158,14 @@ control "boot_volume_low_usage" {
         else 'ok'
       end as status,
       v.display_name || ' averaging ' || b.avg_max || ' read and write ops over the last ' || b.days || ' days.' as reason,
-      v.region,
       coalesce(c.name, 'root') as compartment
+      ${replace(local.tag_dimensions_qualifier_sql, "__QUALIFIER__", "v.")}
+      ${replace(local.common_dimensions_qualifier_sql, "__QUALIFIER__", "v.")}
     from
       boot_volume_usage as b
       left join oci_core_boot_volume as v on b.id = v.id
       left join oci_identity_compartment as c on c.id = b.compartment_id;
-  EOT
+  EOQ
 
   param "boot_volume_avg_read_write_ops_low" {
     description = "The number of average read/write ops required for disks to be considered infrequently used. This value should be lower than boot_volume_avg_read_write_ops_high."
@@ -181,7 +187,7 @@ control "block_volume_auto_tune_performance_enabled" {
   description = "Block volume auto-tune performance ensures the optimal performance setting is used based on whether the volume is attached or detached from an instance."
   severity    = "low"
 
-  sql = <<-EOT
+  sql = <<-EOQ
     select
       a.id as resource,
       case
@@ -192,13 +198,14 @@ control "block_volume_auto_tune_performance_enabled" {
         when is_auto_tune_enabled then a.title || ' auto-tune volume performance enabled.'
         else a.title || ' auto-tune volume performance disabled.'
       end as reason,
-      a.region,
       coalesce(c.name, 'root') as compartment
+      ${replace(local.tag_dimensions_qualifier_sql, "__QUALIFIER__", "a.")}
+      ${replace(local.common_dimensions_qualifier_sql, "__QUALIFIER__", "a.")}
     from
       oci_core_volume as a
       left join oci_identity_compartment as c on c.id = a.compartment_id
     where a.lifecycle_state <> 'TERMINATED';
-  EOT
+  EOQ
 
   tags = merge(local.block_volume_common_tags, {
     class = "deprecated"
@@ -210,21 +217,22 @@ control "block_volume_backup_max_age" {
   description = "Old backups are likely unneeded and costly to maintain."
   severity    = "low"
 
-  sql = <<-EOT
+  sql = <<-EOQ
     select
       a.id as resource,
       case
-        when a.time_created > current_timestamp - interval '$1 days' then 'ok'
+        when extract(day from current_timestamp - a.time_created) < $1 then 'ok'
         else 'alarm'
       end as status,
       a.display_name || ' created ' || to_char(a.time_created , 'DD-Mon-YYYY') ||
-       ' (' || extract(day from current_timestamp - a.time_created) || ' days).' as reason,
-      a.region,
+      ' (' || extract(day from current_timestamp - a.time_created) || ' days).' as reason,
       coalesce(c.name, 'root') as compartment
+      ${replace(local.tag_dimensions_qualifier_sql, "__QUALIFIER__", "a.")}
+      ${replace(local.common_dimensions_qualifier_sql, "__QUALIFIER__", "a.")}
     from
       oci_core_volume_backup as a
       left join oci_identity_compartment as c on c.id = a.compartment_id;
-  EOT
+  EOQ
 
   param "block_volume_backup_age_max_days" {
     description = "The maximum number of days volume backups can be retained."
@@ -241,10 +249,12 @@ control "boot_and_block_volume_large" {
   description = "Large core volumes are unusual, expensive and should be reviewed."
   severity    = "low"
 
-  sql = <<-EOT
+  sql = <<-EOQ
     with all_volumes_with_size as (
       select
         id,
+        _ctx,
+        tenant_id,
         compartment_id,
         region,
         display_name,
@@ -255,6 +265,8 @@ control "boot_and_block_volume_large" {
       union
       select
         id,
+        _ctx,
+        tenant_id,
         compartment_id,
         region,
         display_name,
@@ -270,13 +282,14 @@ control "boot_and_block_volume_large" {
         else 'alarm'
       end as status,
         a.display_name || ' with size ' || a.size_in_gbs || ' gb.' as reason,
-        a.region,
         coalesce(c.name, 'root') as compartment
+        ${local.tag_dimensions_sql}
+        ${replace(local.common_dimensions_qualifier_sql, "__QUALIFIER__", "a.")}
     from
       all_volumes_with_size as a
       left join oci_identity_compartment as c on c.id = a.compartment_id
     where a.lifecycle_state <> 'TERMINATED';
-  EOT
+  EOQ
 
   param "boot_and_block_volume_max_size_gb" {
     description = "The maximum size (GB) allowed for boot and block volumes."
@@ -293,7 +306,7 @@ control "boot_and_block_volume_unattached" {
   description = "Volumes that are unattached may no longer be needed."
   severity    = "low"
 
-  sql = <<-EOT
+  sql = <<-EOQ
     with vols_with_instances as (
       select
         v.volume_id as volume_id
@@ -310,6 +323,8 @@ control "boot_and_block_volume_unattached" {
       select
         id,
         compartment_id,
+        _ctx,
+        tenant_id,
         region,
         display_name,
         size_in_gbs
@@ -319,6 +334,8 @@ control "boot_and_block_volume_unattached" {
       select
         id,
         compartment_id,
+        _ctx,
+        tenant_id,
         region,
         display_name,
         size_in_gbs
@@ -336,13 +353,14 @@ control "boot_and_block_volume_unattached" {
         when v.volume_id is null then a.display_name || ' of size ' || a.size_in_gbs || 'gb not attached.'
         else a.display_name || ' of size ' || a.size_in_gbs || 'gb attached to instance.'
       end as reason,
-      a.region,
       coalesce(c.name, 'root') as compartment
+      ${local.tag_dimensions_sql}
+      ${replace(local.common_dimensions_qualifier_sql, "__QUALIFIER__", "a.")}
     from
       all_volumes as a
       left join vols_with_instances as v on v.volume_id = a.id
       left join oci_identity_compartment as c on c.id = a.compartment_id;
-  EOT
+  EOQ
 
   tags = merge(local.block_volume_common_tags, {
     class = "unused"

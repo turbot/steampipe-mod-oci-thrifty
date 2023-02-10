@@ -42,7 +42,7 @@ control "compute_instance_long_running" {
   description = "Instances should ideally be ephemeral and rehydrated frequently, check why these instances have been running for so long."
   severity    = "low"
 
-  sql = <<-EOT
+  sql = <<-EOQ
     select
       a.id as resource,
       case
@@ -54,12 +54,13 @@ control "compute_instance_long_running" {
         when a.lifecycle_state <> 'RUNNING' then a.title || ' in ' || a.lifecycle_state || ' state.'
         else a.title || ' has been running ' || date_part('day', now() - a.time_created) || ' days.'
       end as reason,
-      a.region,
       coalesce(c.name, 'root') as compartment
+      ${replace(local.tag_dimensions_qualifier_sql, "__QUALIFIER__", "a.")}
+      ${replace(local.common_dimensions_qualifier_sql, "__QUALIFIER__", "a.")}
     from
       oci_core_instance as a
       left join oci_identity_compartment as c on c.id = a.compartment_id;
-  EOT
+  EOQ
 
   param "compute_running_instance_age_max_days" {
     description = "The maximum number of days instances are allowed to run."
@@ -76,7 +77,7 @@ control "compute_instance_low_utilization" {
   description = "Resize or eliminate under utilized instances."
   severity    = "low"
 
-  sql = <<-EOT
+  sql = <<-EOQ
     with core_instance_utilization as (
       select
         id,
@@ -101,13 +102,14 @@ control "compute_instance_low_utilization" {
         when avg_max is null then 'Metrics not available for ' || i.title || '.'
         else i.title || ' averaging ' || avg_max || '% max utilization over the last ' || days || ' days.'
       end as reason,
-      i.region,
       coalesce(c.name, 'root') as compartment
+      ${replace(local.tag_dimensions_qualifier_sql, "__QUALIFIER__", "i.")}
+      ${replace(local.common_dimensions_qualifier_sql, "__QUALIFIER__", "i.")}
     from
       oci_core_instance as i
       left join core_instance_utilization as u on u.id = i.id
       left join oci_identity_compartment as c on c.id = i.compartment_id;
-  EOT
+  EOQ
 
   param "compute_instance_avg_cpu_utilization_low" {
     description = "The average CPU utilization required for instances to be considered infrequently used. This value should be lower than compute_instance_avg_cpu_utilization_high."
@@ -129,7 +131,7 @@ control "compute_instance_monitoring_enabled" {
   description = "The compute instance metrics provide data about the activity level and throughput of the instance. These metrics are required to use features such as autoscaling, metrics, alarms, and notifications with compute instances."
   severity    = "low"
 
-  sql = <<-EOT
+  sql = <<-EOQ
       with instance_monitoring as (
       select
         distinct display_name,
@@ -151,15 +153,16 @@ control "compute_instance_monitoring_enabled" {
         when l.display_name is null then v.title || ' logging disabled.'
         else v.title || ' logging enabled.'
       end as reason,
-      v.region,
       coalesce(c.name, 'root') as compartment
+      ${replace(local.tag_dimensions_qualifier_sql, "__QUALIFIER__", "v.")}
+      ${replace(local.common_dimensions_qualifier_sql, "__QUALIFIER__", "v.")}
     from
       oci_core_instance as v
       left join instance_monitoring as l on v.display_name = l.display_name
       left join oci_identity_compartment as c on c.id = v.compartment_id
     where
       v.lifecycle_state <> 'TERMINATED';
-  EOT
+  EOQ
 
   tags = merge(local.compute_common_tags, {
     class = "managed"
