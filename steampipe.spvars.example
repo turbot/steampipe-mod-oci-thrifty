@@ -1,5 +1,5 @@
 # Dimensions
-common_dimensions = [ "region", "tenant_id" ]
+common_dimensions = ["region"]
 tag_dimensions    = []
 
 # Block Volume
