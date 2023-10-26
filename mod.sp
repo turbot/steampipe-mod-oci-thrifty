@@ -40,7 +40,7 @@ locals {
   EOQ
 
   tag_dimensions_qualifier_sql = <<-EOQ
-  %{~ for dim in var.tag_dimensions },  __QUALIFIER__tags ->> '${dim}' as "${replace(dim, "\"", "\"\"")}"%{ endfor ~} 
+  %{~ for dim in var.tag_dimensions },  __QUALIFIER__tags ->> '${dim}' as "${replace(dim, "\"", "\"\"")}"%{ endfor ~}
   EOQ
 
 }
@@ -72,7 +72,7 @@ mod "oci_thrifty" {
 
   requires {
     plugin "oci" {
-      version = "0.8.1"
+      min_version = "0.8.1"
     }
   }
 }
