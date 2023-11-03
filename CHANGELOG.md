@@ -1,3 +1,9 @@
+## v0.10 [2023-11-03]
+
+_Breaking changes_
+
+- Updated the plugin dependency section of the mod to use `min_version` instead of `version`. ([#49](https://github.com/turbot/steampipe-mod-oci-thrifty/pull/49))
+
 ## v0.9 [2023-02-10]
 
 _What's new?_
