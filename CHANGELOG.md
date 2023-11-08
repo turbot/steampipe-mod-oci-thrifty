@@ -4,6 +4,10 @@ _Breaking changes_
 
 - Updated the plugin dependency section of the mod to use `min_version` instead of `version`. ([#49](https://github.com/turbot/steampipe-mod-oci-thrifty/pull/49))
 
+_Bug fixes_
+
+- Fixed dashboard localhost URLs in README and index doc. ([#45](https://github.com/turbot/steampipe-mod-oci-thrifty/pull/45))
+
 ## v0.9 [2023-02-10]
 
 _What's new?_
