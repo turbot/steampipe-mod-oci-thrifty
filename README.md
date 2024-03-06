@@ -152,5 +152,5 @@ This repository is published under the [Apache 2.0 license](https://www.apache.o
 
 Want to help but don't know where to start? Pick up one of the `help wanted` issues:
 
-- [Steampipe](https://github.com/turbot/steampipe/labels/help%20wanted)
+- [Powerpipe](https://github.com/turbot/powerpipe/labels/help%20wanted)
 - [OCI Thrifty Mod](https://github.com/turbot/steampipe-mod-oci-thrifty/labels/help%20wanted)
