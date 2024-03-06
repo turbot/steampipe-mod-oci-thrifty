@@ -1,15 +1,15 @@
 mod "oci_thrifty" {
-  # hub metadata
+  # Hub metadata
   title         = "Oracle Cloud Infrastructure Thrifty"
-  description   = "Are you a Thrifty Oracle Cloud dev? This mod checks your OCI account(s) to check for unused and under utilized resources using Powerpipe and Steampipe."
+  description   = "Are you a Thrifty Oracle Cloud developer? This mod checks your OCI account(s) to check for unused and under utilized resources using Powerpipe and Steampipe."
   color         = "#F80000"
   documentation = file("./docs/index.md")
   icon          = "/images/mods/turbot/oci-thrifty.svg"
   categories    = ["oci", "cost", "thrifty", "public cloud"]
 
   opengraph {
-    title       = "Thrifty mod for Oracle Cloud Infrastructure"
-    description = "Are you a Thrifty Oracle Cloud dev? This mod checks your OCI account(s) to check for unused and under utilized resources using Powerpipe and Steampipe."
+    title       = "Powerpipe mod for Oracle Cloud Infrastructure Thrifty"
+    description = "Are you a Thrifty Oracle Cloud developer? This mod checks your OCI account(s) to check for unused and under utilized resources using Powerpipe and Steampipe."
     image       = "/images/mods/turbot/oci-thrifty-social-graphic.png"
   }
 

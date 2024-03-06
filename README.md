@@ -1,6 +1,6 @@
 # Oracle Cloud Thrifty Mod for Powerpipe
 
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > [Powerpipe](https://powerpipe.io) is now the preferred way to run this mod! [Migrating from Steampipe →](https://powerpipe.io/blog/migrating-from-steampipe)
 >
 > All v0.x versions of this mod will work in both Steampipe and Powerpipe, but v1.0.0 onwards will be in Powerpipe format only.
@@ -22,10 +22,10 @@ Includes checks for:
 
 ## Documentation
 
-- **[Benchmarks and controls →](https://hub.steampipe.io/mods/turbot/oci_thrifty/controls)**
-- **[Named queries →](https://hub.steampipe.io/mods/turbot/oci_thrifty/queries)**
+- **[Benchmarks and controls →](https://hub.powerpipe.io/mods/turbot/oci_thrifty/controls)**
+- **[Named queries →](https://hub.powerpipe.io/mods/turbot/oci_thrifty/queries)**
 
-## Getting started
+## Getting Started
 
 ### Installation
 
@@ -42,7 +42,7 @@ brew install turbot/tap/steampipe
 steampipe plugin install oci
 ```
 
-Steampipe will automatically use your default Oracle Cloud credentials. Optionally, you can [setup multiple accounts](https://hub.steampipe.io/plugins/turbot/oci#multi-account-connections) or [customize Oracle Cloud credentials](https://hub.steampipe.io/plugins/turbot/oci#configuring-oci-credentials).
+Steampipe will automatically use your default Oracle Cloud credentials. Optionally, you can [setup multiple tenant](https://hub.steampipe.io/plugins/turbot/oci#multi-tenant-connections).
 
 Finally, install the mod:
 
@@ -50,7 +50,7 @@ Finally, install the mod:
 mkdir dashboards
 cd dashboards
 powerpipe mod init
-powerpipe mod install github.com/turbot/powerpipe-mod-oci-thrifty
+powerpipe mod install github.com/turbot/steampipe-mod-oci-thrifty
 ```
 
 ### Browsing Dashboards
@@ -89,15 +89,15 @@ powerpipe benchmark run oci_thrifty.benchmark.block_volume
 Different output formats are also available, for more information please see
 [Output Formats](https://powerpipe.io/docs/reference/cli/benchmark#output-formats).
 
-### Configuration
+### Configure Variables
 
-Several benchmarks have [input variables](https://steampipe.io/docs/using-steampipe/mod-variables) that can be configured to better match your environment and requirements. Each variable has a default defined in its source file, e.g., `controls/sql.sp`, but these can be overwritten in several ways:
+Several benchmarks have [input variables](https://powerpipe.io/docs/build/mod-variables#input-variables) that can be configured to better match your environment and requirements. Each variable has a default defined in its source file, e.g., `controls/sql.sp`, but these can be overwritten in several ways:
 
 It's easiest to setup your vars file, starting with the sample:
 
 ```sh
-cp powerpipe.ppvar.example powerpipe.ppvars
-vi powerpipe.ppvars
+cp steampipe.spvars.example steampipe.spvars
+vi steampipe.spvars
 ```
 
 Alternatively you can pass variables on the command line:
@@ -113,7 +113,7 @@ export PP_VAR_boot_and_block_volume_max_size_gb=100
 powerpipe benchmark run oci_thrifty.benchmark.block_volume
 ```
 
-These are only some of the ways you can set variables. For a full list, please see [Passing Input Variables](https://powerpipe.io/docs/using-steampipe/mod-variables#passing-input-variables).
+These are only some of the ways you can set variables. For a full list, please see [Passing Input Variables](https://powerpipe.io/docs/build/mod-variables#passing-input-variables).
 
 ### Common and Tag Dimensions
 
@@ -122,8 +122,8 @@ The benchmark queries use common properties (like `connection_name`, `region` an
 It's easiest to setup your vars file, starting with the sample:
 
 ```sh
-cp powerpipe.ppvar.example powerpipe.ppvars
-vi powerpipe.ppvars
+cp steampipe.spvars.example steampipe.spvars
+vi steampipe.spvars
 ```
 
 Alternatively you can pass variables on the command line:
