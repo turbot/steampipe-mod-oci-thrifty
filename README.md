@@ -1,4 +1,4 @@
-# Oracle Cloud Thrifty Mod for Steampipe
+# Oracle Cloud Thrifty Mod for Powerpipe
 
 > [!IMPORTANT]  
 > [Powerpipe](https://powerpipe.io) is now the preferred way to run this mod! [Migrating from Steampipe →](https://powerpipe.io/blog/migrating-from-steampipe)
