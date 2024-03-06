@@ -6,9 +6,9 @@ repository: "https://github.com/turbot/steampipe-mod-oci-thrifty"
 
 Be Thrifty on Oracle Cloud! This mod checks for unused resources and opportunities to optimize your spend on Oracle Cloud.
 
-<img src="https://raw.githubusercontent.com/turbot/steampipe-mod-oci-thrifty/add-new-checks/docs/oci_thrifty_dashboard.png" width="50%" type="thumbnail"/>
-<img src="https://raw.githubusercontent.com/turbot/steampipe-mod-oci-thrifty/add-new-checks/docs/oci_thrifty_budget_dashboard.png" width="50%" type="thumbnail"/>
-<img src="https://raw.githubusercontent.com/turbot/steampipe-mod-oci-thrifty/add-new-checks/docs/oci_thrifty_console.png" width="50%" type="thumbnail"/>
+<img src="https://raw.githubusercontent.com/turbot/steampipe-mod-oci-thrifty/main/docs/oci_thrifty_dashboard.png" width="50%" type="thumbnail"/>
+<img src="https://raw.githubusercontent.com/turbot/steampipe-mod-oci-thrifty/main/docs/oci_thrifty_budget_dashboard.png" width="50%" type="thumbnail"/>
+<img src="https://raw.githubusercontent.com/turbot/steampipe-mod-oci-thrifty/main/docs/oci_thrifty_console.png" width="50%" type="thumbnail"/>
 
 ## References
 
